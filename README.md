@@ -15,7 +15,7 @@ Phaedra introduces a hybrid tokenization approach for data that separates:
 This separation enables efficient discrete representations while preserving the precise magnitudes of physical measurements.
 
 <p align="center">
-  <img src="docs/phaedra_pipeline.pdf" width="700" alt="Phaedra Pipeline">
+  <img src="docs/phaedra_pipeline.png" width="700" alt="Phaedra Pipeline">
 </p>
 
 ## Installation
