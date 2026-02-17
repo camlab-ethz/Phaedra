@@ -20,7 +20,7 @@ def test_phaedra_model():
     """Test basic model functionality."""
     print("Testing Phaedra model...")
     
-    from phaedra.phaedra_model import PhaedraModel
+    from src.phaedra_model import PhaedraModel
 
     # Load config (relative to this package directory)
     package_dir = Path(__file__).resolve().parent
@@ -63,7 +63,7 @@ def test_fsq_quantizer():
     """Test FSQ quantizer."""
     print("\nTesting FSQ quantizer...")
     
-    from phaedra.fsq_quant import FSQ
+    from src.fsq_quant import FSQ
     
     # Create quantizer
     levels = [5, 4, 4, 3, 3, 3, 2, 2]
@@ -93,7 +93,7 @@ def test_continuous_layer():
     """Test continuous tokenization layer."""
     print("\nTesting continuous tokenization layer...")
     
-    from phaedra.phaedra_layer import ContinuousTokenizerLayer
+    from src.phaedra_layer import ContinuousTokenizerLayer
     from omegaconf import OmegaConf
     
     # Create config
@@ -130,7 +130,7 @@ def test_encoder_decoder():
     """Test encoder and decoder."""
     print("\nTesting encoder/decoder...")
     
-    from phaedra.encoder_decoder import Encoder, Decoder
+    from src.encoder_decoder import Encoder, Decoder
     
     # Config
     ch = 64
