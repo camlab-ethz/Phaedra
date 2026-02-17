@@ -15,15 +15,15 @@ Phaedra introduces a hybrid tokenization approach for data that separates:
 This separation enables efficient discrete representations while preserving the precise magnitudes of physical measurements.
 
 <p align="center">
-  <img src="docs/Phaedra_pipeline.pdf" width="700" alt="Phaedra Pipeline">
+  <img src="docs/phaedra_pipeline.pdf" width="700" alt="Phaedra Pipeline">
 </p>
 
 ## Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/phaedra.git
-cd phaedra
+git clone https://github.com/camlab-ethz/Phaedra.git
+cd Phaedra
 
 # Install with pip
 pip install -e .
@@ -172,10 +172,14 @@ phaedra/
 If you use Phaedra in your research, please cite:
 
 ```bibtex
-@inproceedings{phaedra2026,
-  title={Phaedra: },
-  author={Lingsch, Levi and Kissas, Georgios and Jakubik, Johannes and Mishra, Siddhartha},
-  year={2026}
+@misc{lingsch2026phaedra,
+      title={Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Science}, 
+      author={Levi Lingsch and Georgios Kissas and Johannes Jakubik and Siddhartha Mishra},
+      year={2026},
+      eprint={2602.03915},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2602.03915}, 
 }
 ```
 
@@ -186,5 +190,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - FSQ implementation based on [Mentzer et al., 2024](https://arxiv.org/abs/2309.15505)
-- Encoder-decoder architecture inspired by [Rombach et al., 2022](https://arxiv.org/abs/2112.10752)
 - AdEMAMix optimizer from [Pagliardini et al., 2024](https://arxiv.org/abs/2409.03137)
