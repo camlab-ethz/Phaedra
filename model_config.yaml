@@ -1,0 +1,97 @@
+# Phaedra Model Configuration
+# ============================
+# Configuration for the Phaedra continuous Earth observation tokenizer.
+
+tokenizer_hyperparameters:
+  # VAE Architecture
+  vae_hyperparameters:
+    input_channels: 1              # Number of input channels
+    encoder_channel_mult: [2, 2, 4]  # Channel multipliers (defines downsampling: 2^(n-1))
+    decoder_channel_mult: [2, 2, 4]  # Should match encoder for symmetric architecture
+    num_res_blocks: 4              # ResNet blocks per resolution level
+    attn_resolutions: [16, 32]     # Resolutions at which to apply self-attention
+    input_h: 128                   # Input height
+    input_w: 128                   # Input width
+    latent_channels: 128           # Base channel count in encoder/decoder
+    dropout: 0.0                   # Dropout rate (0.0 for inference)
+    double_z: false                # Whether to double latent channels (for VAE)
+  
+  # Finite Scalar Quantization (Morphological Tokens)
+  fsq_hyperparameters:
+    fsq_L: [5, 4, 4, 3, 3, 3, 2, 2]  # Quantization levels per dimension
+    codebook_embed_dim: 9          # Total embedding dimension (len(fsq_L) + 1)
+    fsq_scale: 10.0                # Scaling factor before quantization
+  
+  # Continuous Tokenization (Amplitude Tokens)
+  ct_hyperparameters:
+    quantizer: "FSQ"               # Quantizer type
+    continuous_scale: 0.1          # Scaling factor for continuous values
+    continuous_L: 1024             # Number of quantization levels
+    use_entropy_loss: true         # Whether to use entropy regularization
+    quantizer_commit_loss_beta: 0.1  # Commitment loss weight
+  
+  # Convolution layers around quantizer
+  conv_hyperparameters:
+    quant_conv_ks: 3               # Kernel size for pre/post quantization convs
+
+# Effective codebook size: prod(fsq_L) = 8640
+codebook_size: 8640
+
+# Training Configuration
+# ----------------------
+training_hyperparameters:
+  # AdEMAMix Optimizer Settings
+  lr: 0.0001                   # Learning rate
+  beta1: 0.5                   # Fast EMA decay
+  beta2: 0.9                   # Second moment decay  
+  beta3: 0.99                  # Slow EMA decay
+  alpha: 2.0                   # EMA mixing coefficient
+  beta3_warmup: 250            # Steps to warm up beta3
+  alpha_warmup: 250            # Steps to warm up alpha
+  weight_decay: 0.01           # AdamW-style weight decay
+  
+  # EMA and Learning Rate Schedule
+  ema: 0.999                   # Model EMA decay
+  lr_factor: 0.97              # LR reduction factor on plateau
+  lr_patience: 100000          # Steps before LR reduction
+  lr_min: 1e-7                 # Minimum learning rate
+  
+  # Training Loop
+  epochs: 1                    # Number of training epochs
+  log_every: 5000              # Steps between logging
+  val_every: 5000              # Steps between validation
+  
+  # Directories
+  logging_dir: "logs"          # Directory for logs
+  checkpoint_dir: "checkpoints"  # Directory for checkpoints
+  test_dir: "test"             # Directory for test outputs
+  
+  # Logging and Checkpointing
+  enable_wandb: false          # Enable Weights & Biases logging
+  experiment_name: "Phaedra"   # Experiment identifier
+  load_from_checkpoint: null   # Checkpoint step to resume from
+  
+  # Training Precision
+  fp16: true                   # Use BF16 mixed precision
+  grad_accum_steps: 2          # Gradient accumulation steps
+  all_processes: false         # Log from all processes
+
+# DataLoader Configuration
+# ------------------------
+system_config:
+  copy_to: null                # Optional: copy data to fast storage
+  dataset_args: []             # Positional args for dataset
+  dataset_kwargs: {}           # Keyword args for dataset
+  
+  dataloader_kwargs:
+    num_workers: 4             # Number of data loading workers
+    batch_size: 8              # Batch size per GPU
+    shuffle: false             # Shuffle training data
+    pin_memory: true           # Pin memory for faster GPU transfer
+    drop_last: true            # Drop incomplete batches
+    persistent_workers: false  # Keep workers alive between epochs
+    prefetch_factor: 2         # Batches to prefetch per worker
+    timeout: 0.0               # Timeout for data loading
+    worker_init_fn: null       # Custom worker initialization
+    multiprocessing_context: null  # Multiprocessing mode
+    generator: null            # Random generator for shuffling
