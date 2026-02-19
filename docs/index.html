@@ -245,7 +245,7 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3">Interactive Latent Space Exploration</h2>
     <p class="has-text-centered mb-5">
-      Use the sliders below to independently interpolate the morphology ($z_\mu$) and amplitude ($z_\alpha$) tokens.
+      Use the sliders below to independently interpolate the morphology ($z_\mu$) and amplitude ($z_\alpha$) tokens between two timesteps of the Kelvin-Helmholtz (KH) instability dataset.
     </p>
 
     <div class="box" style="background-color: #fcfcfc;">
@@ -259,8 +259,8 @@
             <div class="control">
               <input id="slider_mu" type="range" min="0" max="10" value="0" style="width: 100%; cursor: pointer;">
               <div class="is-flex is-justify-content-space-between is-size-7 has-text-grey">
-                <span>Phaedra (A)</span>
-                <span>CRP (B)</span>
+                <span>KH t=0.95 (A)</span>
+                <span>KH t=1.00 (B)</span>
               </div>
             </div>
           </div>
@@ -272,8 +272,8 @@
             <div class="control">
               <input id="slider_alpha" type="range" min="0" max="10" value="0" style="width: 100%; cursor: pointer;">
               <div class="is-flex is-justify-content-space-between is-size-7 has-text-grey">
-                <span>Phaedra (A)</span>
-                <span>CRP (B)</span>
+                <span>KH t=0.95 (A)</span>
+                <span>KH t=1.00 (B)</span>
               </div>
             </div>
           </div>
