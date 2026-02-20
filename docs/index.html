@@ -513,3 +513,21 @@
           This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
         </p>
       </div>
+
+<script>
+document.addEventListener('click', function(event) {
+  // Find the closest link element that was clicked
+  var link = event.target.closest('a');
+  
+  if (link && link.href.includes('arxiv.org')) {
+    gtag('event', 'paper_view', {
+      'event_category': 'engagement',
+      'event_label': link.href,
+      'transport_type': 'beacon' // Ensures the data is sent even as the page closes
+    });
+  }
+});
+</script>
+
+</body>
+</html>
