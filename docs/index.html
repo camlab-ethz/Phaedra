@@ -270,7 +270,7 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3">Interactive Latent Space Exploration</h2>
     <p class="has-text-justified mb-5">
-      Use the sliders below to independently interpolate the morphology ($z_\mu$) and amplitude ($z_\alpha$) tokens between two timesteps of the Kelvin-Helmholtz (KH) instability dataset.
+      Use the sliders below to independently interpolate the morphology ($z_\mu$) and amplitude ($z_\alpha$) tokens between two timesteps of the Kelvin-Helmholtz (KH) instability dataset. This example illustrates the disentanglement of features via the amplitude-morphology latent representations. Interpolating between the amplitude tokens shows larger changes within the overall structure of the flow, while changing morphology tokens results in finer changes to the turbulent structures, while maintaining the same overall dynamic range. By combining the morphology of one sample with the amplitude of another, we can generate reconstructions that maintain the fine-scale turbulent structure of one sample while strictly obeying the physical dynamic range of the other. Please note, this example is only for illustrative purposes and does not represent a true interpolation in the latent space, as the model was not trained with an explicit disentanglement loss.
     </p>
 
     <div class="box" style="background-color: #fcfcfc;">
