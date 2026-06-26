@@ -1,6 +1,6 @@
 # Phaedra Model Configuration
 # ============================
-# Configuration for the Phaedra continuous Earth observation tokenizer.
+# Configuration for the Phaedra tokenizer for the physical sciences.
 
 tokenizer_hyperparameters:
   # VAE Architecture

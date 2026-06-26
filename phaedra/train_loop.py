@@ -117,10 +117,13 @@ def fit(
                     if torch.isnan(loss).any() or torch.isinf(loss).any():
                         raise RuntimeError(f"[Rank {accelerator.process_index}] Loss is NaN or inf: {loss}")
 
-                    torch.nn.utils.clip_grad_norm_(task.parameters(), max_norm=5.0)
                     accelerator.backward(loss)
+                    # Clip and step only once gradients are synced (handles grad accumulation).
+                    if accelerator.sync_gradients:
+                        accelerator.clip_grad_norm_(task.parameters(), max_norm=5.0)
                     optimizer.step()
-                    task.ema.update()
+                    if accelerator.sync_gradients:
+                        task.ema.update()
                     optimizer.zero_grad()
 
                     running_loss += loss.item()
@@ -136,17 +139,24 @@ def fit(
                 usage_tensor = torch.tensor(avg_usage, device=accelerator.device)
                 usage_reduced = accelerator.reduce(usage_tensor, reduction="mean")
                 
-                # Step the scheduler based on validation loss
+                # Step the scheduler on EVERY rank so the LR stays identical across ranks.
+                for scheduler in schedulers:
+                    scheduler.step(val_loss_reduced.item())
+
                 if accelerator.is_main_process:
-                    for scheduler in schedulers:
-                        scheduler.step(val_loss_reduced.item())
-                        # Log current learning rate
-                        current_lr = optimizers[0].param_groups[0]['lr']
-                        log_metric(logger, "learning_rate", current_lr, epoch, global_step, log_wandb=enable_wandb)
-                        accelerator.print(f"Step {global_step} \t Current LR: {current_lr:.2e} \t Validation L1 Loss: {val_loss_reduced:.4f} \t Token Usage: {usage_reduced:.2f}%")
-                        log_metric(logger, "validation L1 loss", val_loss_reduced, epoch, global_step, log_wandb=enable_wandb)
-                        log_metric(logger, "validation token usage (%)", usage_reduced, epoch, global_step, log_wandb=enable_wandb)
-                
+                    current_lr = optimizers[0].param_groups[0]['lr']
+                    log_metric(logger, "learning_rate", current_lr, epoch, global_step, log_wandb=enable_wandb)
+                    accelerator.print(f"Step {global_step} \t Current LR: {current_lr:.2e} \t Validation L1 Loss: {val_loss_reduced:.4f} \t Token Usage: {usage_reduced:.2f}%")
+                    log_metric(logger, "validation L1 loss", val_loss_reduced, epoch, global_step, log_wandb=enable_wandb)
+                    log_metric(logger, "validation token usage (%)", usage_reduced, epoch, global_step, log_wandb=enable_wandb)
+
+                    # Save a ground-truth vs reconstruction comparison figure.
+                    save_contourf_comparison(
+                        x_validation.to(torch.float32),
+                        recon_validation.to(torch.float32),
+                        f"{checkpoint_dir}/{experiment_name}_{global_step}/validation_samples.png",
+                    )
+
 
             # Log training and save checkpoints
             if accelerator.is_main_process and global_step % log_every == 0 and step > 0:
@@ -164,34 +174,10 @@ def fit(
 
 
                 start_time = time.time()
-            # ── validation ──────────────────────────────────────────────────────
-            if val_loader is not None and global_step % log_every==0 and global_step > -1:
-                task.eval()
-                val_loss, x_validation, recon_validation, avg_usage = validate(task, val_loader, global_step=global_step)
-                # must convert val_loss to a tensor in order to reduce across ranks
-                val_loss_tensor = torch.tensor(val_loss, device=accelerator.device)
-                val_loss_reduced = accelerator.reduce(val_loss_tensor, reduction="mean")
-                
-                # Reduce usage across ranks
-                usage_tensor = torch.tensor(avg_usage, device=accelerator.device)
-                usage_reduced = accelerator.reduce(usage_tensor, reduction="mean")
-                
-                if accelerator.is_main_process:
-                    log_metric(logger, "validation L1 loss", val_loss_reduced, epoch, global_step, log_wandb=enable_wandb)
-                    log_metric(logger, "validation token usage (%)", usage_reduced, epoch, global_step, log_wandb=enable_wandb)
 
-                    if isinstance(recon_validation, tuple):
-                        diffusion_outputs, deterministic_outputs = recon_validation
-                        save_contourf_comparison(x_validation, diffusion_outputs, f"{checkpoint_dir}/{experiment_name}_{global_step}/diffusion_samples.png")
-                        save_contourf_comparison(x_validation, deterministic_outputs, f"{checkpoint_dir}/{experiment_name}_{global_step}/decoder_samples.png")
-                    else:
-                        # imagenet hack -------------------------------------------------------
-                        x_validation = x_validation.to(torch.float32)
-                        recon_validation = recon_validation.to(torch.float32)
-                        # ----------------------------------------------------------------------
-                        save_contourf_comparison(x_validation, recon_validation, f"{checkpoint_dir}/{experiment_name}_{global_step}/validation_samples.png")
-                task.train()
-                
+            # Return to training mode after any eval/checkpoint work this step.
+            task.train()
+
             # update global step
             global_step += 1
 

@@ -1,5 +1,5 @@
 """
-Phaedra Model - Continuous Earth Observation Tokenizer.
+Phaedra Model - High-Fidelity Tokenizer for the Physical Sciences.
 
 This module implements the core autoencoder architecture with:
 - Finite Scalar Quantization (FSQ) for morphological features

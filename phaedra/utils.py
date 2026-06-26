@@ -22,32 +22,34 @@ import matplotlib.pyplot as plt
 # ─────────────────────────────────────────────────────────────────────────────
 # Normalization Utilities
 # ─────────────────────────────────────────────────────────────────────────────
-
-def normalize_tensor(x: torch.Tensor, dim: Tuple[int, ...] = (-2, -1)) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Normalize tensor to zero mean and unit variance.
-    
-    Args:
-        x: Input tensor
-        dim: Dimensions over which to compute statistics
-    
-    Returns:
-        Tuple of (normalized tensor, mean, std)
-    """
-    mean = x.mean(dim=dim, keepdim=True)
-    std = x.std(dim=dim, keepdim=True) + 1e-8
-    return (x - mean) / std, mean, std
+#
+# Normalization scheme
+# --------------------
+# Phaedra is trained on data that is normalized PER DATASET, not per sample.
+# For each dataset, a single (mean, std) statistic is computed once (offline,
+# over the whole dataset) and applied to every sample in that dataset. When
+# training on a mixture of datasets, each dataset is normalized with its own
+# (mean, std). The dataloader is therefore expected to yield the per-dataset
+# statistics alongside each (already-normalized) sample, broadcast to that
+# sample's shape, under the keys `field_variables_in_mean` / `_in_std`.
+#
+# `denormalize_tensor` below simply inverts that transform so reconstructions
+# can be compared against ground-truth in the original (un-normalized) units.
+# There is intentionally no in-pipeline `normalize_tensor`: normalization is a
+# dataset-level preprocessing step owned by your `create_dataloader`, not a
+# per-sample operation performed inside the model.
 
 
 def denormalize_tensor(x: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) -> torch.Tensor:
-    """Denormalize tensor using provided mean and std.
-    
+    """Invert per-dataset normalization using the stored mean and std.
+
     Args:
-        x: Normalized tensor
-        mean: Mean used for normalization
-        std: Std used for normalization
-    
+        x: Normalized tensor.
+        mean: Per-dataset mean used for normalization (broadcast to ``x``).
+        std: Per-dataset std used for normalization (broadcast to ``x``).
+
     Returns:
-        Denormalized tensor
+        Tensor returned to its original (un-normalized) units.
     """
     return x * std + mean
 
@@ -56,19 +58,23 @@ def denormalize_tensor(x: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) -
 # Token Usage Statistics
 # ─────────────────────────────────────────────────────────────────────────────
 
-def compute_token_usage(tokens: torch.Tensor) -> Tuple[float, int, int]:
+def compute_token_usage(tokens: torch.Tensor, codebook_size: Optional[int] = None) -> Tuple[float, int, int]:
     """Compute token usage statistics.
-    
+
     Args:
-        tokens: Token indices tensor
-    
+        tokens: Token indices tensor.
+        codebook_size: True number of entries in the codebook. If ``None`` it is
+            estimated from the maximum observed index, which UNDER-counts the
+            codebook whenever the highest indices are never used — pass the real
+            value (e.g. ``FSQ.codebook_size``) for an accurate percentage.
+
     Returns:
-        Tuple of (usage percentage, unique count, total possible)
+        Tuple of (usage percentage, unique count, codebook size used).
     """
     unique_tokens = torch.unique(tokens)
     n_unique = len(unique_tokens)
-    # Estimate codebook size from max token index (conservative)
-    codebook_size = tokens.max().item() + 1
+    if codebook_size is None:
+        codebook_size = int(tokens.max().item()) + 1
     usage_pct = 100.0 * n_unique / codebook_size
     return usage_pct, n_unique, codebook_size
 

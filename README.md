@@ -127,11 +127,15 @@ The dataloader should return batches with the following structure:
 batch = {
     "field_variables_in": tensor,      # Input [B, C, H, W]
     "field_variables_out": tensor,     # Target [B, C, H, W]  
-    "field_variables_in_mean": tensor, # Per-sample mean
-    "field_variables_in_std": tensor,  # Per-sample std
+    "field_variables_in_mean": tensor, # Per-dataset mean, broadcast to this sample
+    "field_variables_in_std": tensor,  # Per-dataset std, broadcast to this sample
 }
 ```
 
+Normalization is performed **per dataset** as an offline preprocessing step
+(one `(mean, std)` per dataset, applied to every sample), not per sample. Your
+`create_dataloader()` is responsible for normalizing inputs and returning the
+corresponding per-dataset statistics so reconstructions can be denormalized.
 See `train.py` for the `create_dataloader()` interface.
 
 ## Training Details
@@ -189,5 +193,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- FSQ implementation based on [Mentzer et al., 2024](https://arxiv.org/abs/2309.15505)
+- FSQ method from [Mentzer et al., 2024](https://arxiv.org/abs/2309.15505); the
+  FSQ code in `src/fsq_quant.py` is adapted from lucidrains'
+  [vector-quantize-pytorch](https://github.com/lucidrains/vector-quantize-pytorch)
+  (MIT License, © Phil Wang). See [THIRD_PARTY_LICENSES](THIRD_PARTY_LICENSES).
 - AdEMAMix optimizer from [Pagliardini et al., 2024](https://arxiv.org/abs/2409.03137)

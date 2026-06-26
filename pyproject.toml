@@ -5,11 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "phaedra"
 version = "1.0.0"
-description = "Continuous Earth Observation Tokenizer"
+description = "High-Fidelity Discrete Tokenization for the Physical Sciences"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Phaedra Team"}
+    {name = "Levi Lingsch", email = "levi.lingsch@ai.ethz.ch"},
+    {name = "Georgios Kissas"},
+    {name = "Johannes Jakubik"},
+    {name = "Siddhartha Mishra"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -20,9 +23,9 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Physics",
 ]
-keywords = ["tokenization", "earth observation", "deep learning", "quantization"]
+keywords = ["tokenization", "physical sciences", "deep learning", "quantization"]
 requires-python = ">=3.9"
 dependencies = [
     "torch>=2.0.0",
@@ -51,10 +54,10 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/phaedra"
-Documentation = "https://github.com/your-org/phaedra#readme"
-Repository = "https://github.com/your-org/phaedra"
-Issues = "https://github.com/your-org/phaedra/issues"
+Homepage = "https://github.com/camlab-ethz/Phaedra"
+Documentation = "https://github.com/camlab-ethz/Phaedra#readme"
+Repository = "https://github.com/camlab-ethz/Phaedra"
+Issues = "https://github.com/camlab-ethz/Phaedra/issues"
 
 [project.scripts]
 phaedra-train = "phaedra.train:main"

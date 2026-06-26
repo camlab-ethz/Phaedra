@@ -73,6 +73,16 @@ class PhaedraSystem(BaseTaskModel):
     # ──────────────────────────────────────────────────────────────────────
     # Encoding / decoding interface
     # ──────────────────────────────────────────────────────────────────────
+    @property
+    def _core(self):
+        """Unwrapped PhaedraModel, regardless of any Accelerate/DDP wrapper.
+
+        ``prepare_model`` sets ``self.module`` to the unwrapped model; before
+        that (e.g. single-process inference straight after construction) we fall
+        back to ``self.model`` so submodule access still works.
+        """
+        return getattr(self, "module", None) or self.model
+
     def produce_tokens(self, batch: Batch):
         """Encodes input batch into hierarchical discrete + continuous tokens."""
         x = batch["field_variables_in"]
@@ -85,8 +95,8 @@ class PhaedraSystem(BaseTaskModel):
     
 
         # decode hierarchical + continuous embeddings
-        morph_embeddings = self.module.quantizer.get_codebook_entry(morph_tokens)
-        amp_embeddings = self.module.approximate_continuous.get_codebook_entry(amp_tokens)
+        morph_embeddings = self._core.quantizer.get_codebook_entry(morph_tokens)
+        amp_embeddings = self._core.approximate_continuous.get_codebook_entry(amp_tokens)
 
         # full latent + decode
         full_embeddings = torch.cat([morph_embeddings, amp_embeddings], dim=1)
@@ -120,12 +130,13 @@ class PhaedraSystem(BaseTaskModel):
         x = batch["field_variables_in"]
         recon, emb_loss, quant, tokens_hier, usage = self.model(x)
 
-        # Compute average usage percentage
-        usage_avg = 0.0
-        for tokens_set in tokens_hier[0]: # tokens_hier[0] is a list of the VAR tokens
-            usage_pct, _, _ = compute_token_usage(tokens_set[-1])
-            usage_avg += usage_pct
-        usage_pct = usage_avg / len(tokens_hier[0])
+        # Token usage over the morphological FSQ codebook. tokens_hier is
+        # [morph_tokens, continuous_tokens]; morph_tokens is a single index
+        # tensor of shape [B, H', W'] for this single-scale model.
+        morph_tokens = tokens_hier[0]
+        usage_pct, _, _ = compute_token_usage(
+            morph_tokens, codebook_size=self._core.quantizer.codebook_size
+        )
 
         # Denormalize reconstruction
         mean = batch["field_variables_in_mean"]
@@ -146,25 +157,23 @@ class PhaedraSystem(BaseTaskModel):
             # Direct forward pass
             recon_direct, _, quant, tokens_1, *_ = self.model(x)
 
-            # Encode → decode pass
-            # Check token consistency
+            # Encode → decode pass; check token consistency. tokens_* are
+            # [morph_tokens, continuous_tokens], each a single index tensor.
             tokens_2 = self.model(x, mode="encode")[2]
-            for t1, t2 in zip(tokens_1[0], tokens_2[0]):
-                for level in range(len(t1)):
-                    assert torch.allclose(t1[level], t2[level], atol=1e-7), f"Inference verification failed!"
+            assert torch.allclose(tokens_1[0], tokens_2[0], atol=1e-7), "Inference verification failed -- Morph Token Discrepancies!"
             assert torch.allclose(tokens_1[1], tokens_2[1], atol=1e-7), "Inference verification failed -- Continuous Token Discrepancies!"
 
             # Check embedding reconstructions from tokens
             amp_embeddings_1 = quant[:, -1:, :, :]
-            amp_embeddings_2 = self.model.approximate_continuous.get_codebook_entry(tokens_2[1])
+            amp_embeddings_2 = self._core.approximate_continuous.get_codebook_entry(tokens_2[1])
             assert torch.allclose(amp_embeddings_1, amp_embeddings_2, atol=1e-7), "Inference verification failed -- Continuous Embedding Discrepancies!"
-            
+
             morph_embeddings_1 = quant[:, :-1, :, :]
-            morph_embeddings_2 = self.model.quantizer.get_codebook_entry(tokens_2[0])
+            morph_embeddings_2 = self._core.quantizer.get_codebook_entry(tokens_2[0])
             assert torch.allclose(morph_embeddings_1, morph_embeddings_2, atol=1e-6), "Inference verification failed -- Morph Embedding Discrepancies!"
-            
-            out_1 = self.model.decoder(self.model.post_quant_conv(torch.cat([morph_embeddings_1, amp_embeddings_1], dim=1)))  # Warm-up pass for any lazy modules
-            out_2 = self.model.decoder(self.model.post_quant_conv(torch.cat([morph_embeddings_2, amp_embeddings_2], dim=1)))
+
+            out_1 = self._core.decoder(self._core.post_quant_conv(torch.cat([morph_embeddings_1, amp_embeddings_1], dim=1)))  # Warm-up pass for any lazy modules
+            out_2 = self._core.decoder(self._core.post_quant_conv(torch.cat([morph_embeddings_2, amp_embeddings_2], dim=1)))
             assert torch.allclose(out_1, out_2, atol=1e-2), "Inference verification failed -- Decoded Output Discrepancies!"
 
             recon_encode_decode = self.predict_from_tokens(tokens_2)

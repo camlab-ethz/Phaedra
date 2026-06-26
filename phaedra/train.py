@@ -52,8 +52,8 @@ def create_dataloader(config, split="train"):
     The dataloader should return batches with the following keys:
         - 'field_variables_in': Input tensor [B, C, H, W]
         - 'field_variables_out': Target tensor [B, C, H, W] (for validation)
-        - 'field_variables_in_mean': Per-sample mean for denormalization
-        - 'field_variables_in_std': Per-sample std for denormalization
+        - 'field_variables_in_mean': Per-dataset mean (broadcast per sample) for denormalization
+        - 'field_variables_in_std': Per-dataset std (broadcast per sample) for denormalization
     
     Args:
         config: OmegaConf configuration object

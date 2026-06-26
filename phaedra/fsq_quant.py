@@ -1,12 +1,18 @@
 """
 Finite Scalar Quantization (FSQ) Implementation.
 
-Based on "Finite Scalar Quantization: VQ-VAE Made Simple" (Mentzer et al., ICLR 2024)
+Method: "Finite Scalar Quantization: VQ-VAE Made Simple" (Mentzer et al., ICLR 2024)
 https://arxiv.org/abs/2309.15505
 
-Original implementation adapted from https://github.com/duchenzhuang/FSQ-pytorch
+This implementation is adapted from lucidrains' `vector-quantize-pytorch`
+(finite_scalar_quantization.py), which is released under the MIT License,
+Copyright (c) Phil Wang. See the THIRD_PARTY_LICENSES file at the repository
+root for the full upstream license text. The original Phaedra reference to
+https://github.com/duchenzhuang/FSQ-pytorch is retained for provenance; that
+repository vendors the same lucidrains implementation.
 
-Code adapted from Jax version in Appendix A.1
+Local modifications: addition of a learnable/fixed `scale` factor applied
+before and after quantization.
 """
 
 from typing import List, Optional
