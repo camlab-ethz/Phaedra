@@ -1,0 +1,22 @@
+dataset:
+  name: "CEU_2D_RiemannCurvedLowRes"
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/fields/"
+  variables: ["rho", "u", "v", "p"]
+  num_members: 10000
+  num_timesteps: 21
+  max_num_val_samples: 120
+  max_num_test_samples: 240
+  resolution: [128, 128]
+  normalization:
+    rho:
+      mean: 0.548238
+      std: 0.322666 
+    u:
+      mean: 0.00042
+      std: 0.275455
+    v:
+      mean: 0.0026327
+      std: 0.275455
+    p:
+      mean: 0.552022
+      std: 0.169886

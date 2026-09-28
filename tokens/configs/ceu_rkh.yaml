@@ -1,0 +1,22 @@
+dataset:
+  name: "CEU_2D_RiemannKelvinHelmholtzLowRes"
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/fields/"
+  variables: ["rho", "u", "v", "p"]
+  num_members: 10000
+  num_timesteps: 21
+  max_num_val_samples: 120
+  max_num_test_samples: 240
+  resolution: [128, 128]
+  normalization:
+    rho:
+      mean: 0.54368621
+      std: 0.36185354
+    u:
+      mean: -0.00332036
+      std: 0.21069140
+    v:
+      mean: 0.00215155
+      std: 0.2153050
+    p:
+      mean: 0.5488216
+      std: 0.19982270

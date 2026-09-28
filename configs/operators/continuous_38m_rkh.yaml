@@ -1,0 +1,34 @@
+# Transformer on continuous-AE latents, 38M, RKH (python -m baselines.train_continuous).
+# Same recipe as the Phaedra / FSQ token transformers: 100 epochs, lr 4e-4.
+run_name: continuous_38m_rkh
+dataset:
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/latents/continuous/CEU2D_RiemannKelvinHelmholtzLatents.nc"
+  batch_size_train: 32   # per GPU, as for the token transformers; ~7.8 GiB with gradient checkpointing
+  batch_size_val: 16
+  num_workers: 8
+  max_train_members: null
+model:
+  latent_channels: 8
+  num_vars: 4
+  grid_size: 32
+  embed_dim: 320
+  encoder_depth: 19
+  decoder_depth: 9
+  num_heads: 8
+  mlp_ratio: 4
+  max_time_index: 14
+  grad_checkpointing: true
+training:
+  epochs: 100
+  lr: 4.0e-4
+  weight_decay: 0.01
+  warmup_steps: 1000
+  grad_clip: 1.0
+  log_every: 100
+  checkpoint_every_epoch: 10
+  compile: false  # compile + 4096-seq activations OOM on 24GB; grad-ckpt instead
+budget: { target_params: 38000000, tolerance_frac: 0.05 }
+wandb: { enabled: false, project: phaedra, entity: null, run_name: continuous_38m_rkh, mode: online }
+validation: { max_batches: 16 }
+output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/continuous_38m_rkh"
+runtime: { seed: 42 }

@@ -1,0 +1,37 @@
+\begin{table}[h]
+    \centering
+    \caption{Full per-variable operator learning relative $L_1$ errors at final time step ($t=0.7$).}
+    \begin{tabular}{llccccccc}
+        \toprule
+        Model & Dataset  & $\rho$ & $u$ & $v$ & $p$ & Average & Strategy & CI$_{95}$ \\
+        \midrule
+        FNO & KH & 6.24 & 11.18 & 32.23 & 0.54 & 12.55 & 6-6-2 & $\pm0.36$ \\
+        FNO & RC & 26.31 & 53.62 & 53.42 & 9.16 & 35.63 & 6-6-2 & $\pm0.69$ \\
+        FNO & RKH & 10.08 & 26.36 & 25.67 & 4.54 & 16.66 & 6-6-2 & $\pm0.91$ \\
+        \midrule
+        CNO & KH & 5.06 & 9.10 & 25.93 & 0.51 & 10.15 & 2-step & $\pm0.32$ \\
+        CNO & RC & 22.65 & 44.44 & 44.66 & 7.94 & 29.92 & 2-step & $\pm0.74$ \\
+        CNO & RKH & 6.79 & 18.83 & 18.50 & 3.17 & 11.82 & 6-6-2 & $\pm0.82$ \\
+        \midrule
+        ViT & KH & 4.64 & 8.25 & 23.33 & 0.51 & \textbf{9.18} & 6-6-2 & $\pm0.27$ \\
+        ViT & RC & 28.76 & 60.17 & 59.51 & 10.28 & 39.68 & direct & $\pm0.58$ \\
+        ViT & RKH & 9.09 & 20.86 & 19.66 & 3.18 & 13.20 & 6-6-2 & $\pm0.79$ \\
+        \midrule
+        Continuous Transformer & KH & 4.64 & 8.34 & 23.53 & 0.61 & 9.28 & 6-6-2 & $\pm0.30$ \\
+        Continuous Transformer & RC & 77.95 & 197.31 & 156.93 & 44.00 & 119.05 & direct & $\pm2.96$ \\
+        Continuous Transformer & RKH & 7.09 & 18.09 & 17.87 & 3.18 & 11.56 & 6-6-2 & $\pm0.70$ \\
+        \midrule
+        VQ-VAE-2 & KH & 7.95 & 13.90 & 38.04 & 0.68 & 15.14 & 6-6-2 & $\pm0.48$ \\
+        VQ-VAE-2 & RC & 29.54 & 63.17 & 64.39 & 12.48 & 42.40 & direct & $\pm0.63$ \\
+        VQ-VAE-2 & RKH & 14.73 & 38.09 & 37.29 & 7.97 & 24.52 & 6-6-2 & $\pm1.15$ \\
+        \midrule
+        FSQ & KH & 5.30 & 10.91 & 28.27 & 0.62 & 11.28 & 6-6-2 & $\pm0.34$ \\
+        FSQ & RC & 28.12 & 57.08 & 56.77 & 10.21 & 38.05 & 6-6-2 & $\pm1.05$ \\
+        FSQ & RKH & 10.37 & 27.73 & 28.78 & 5.08 & 17.99 & 6-6-2 & $\pm1.37$ \\
+        \midrule
+        Phaedra & KH & 4.78 & 8.43 & 24.29 & 0.51 & 9.50 & direct & $\pm0.34$ \\
+        Phaedra & RC & 20.66 & 40.73 & 40.42 & 7.02 & \textbf{27.21} & 6-6-2 & $\pm0.71$ \\
+        Phaedra & RKH & 6.52 & 16.01 & 15.64 & 2.74 & \textbf{10.23} & 6-6-2 & $\pm0.80$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}

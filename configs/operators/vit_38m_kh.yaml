@@ -1,0 +1,105 @@
+dataset:
+  token_dataset_path: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/phaedra/CEU2D_KelvinHelmholtzTokens.nc"
+  source_dataset_path: null
+  variable_order: [rho, u, v, p]
+  input_variables: [rho, u, v, p]
+  output_variables: [rho, u, v, p]
+  normalization:
+    rho:
+      mean: 0.75
+      std: 0.22776
+    u:
+      mean: -0.016416
+      std: 0.112602
+    v:
+      mean: 0.00005
+      std: 0.044217
+    p:
+      mean: 1.0
+      std: 0.0083488
+
+  split_train: train
+  split_val: val
+  pair_mode_train: all_even_forward
+  pair_mode_val: fixed
+  time_start: 0
+  time_end: 14
+  time_step: 2
+  fixed_input_time: 0
+  fixed_output_time: 14
+
+  max_train_members: null
+  max_val_members: null
+  train_member_start: 0
+  train_member_end: 9640
+  val_samples_hint: 120
+  test_samples_hint: 240
+
+  num_workers: 8
+  pin_memory: true
+  batch_size_train: 8
+  batch_size_val: 8
+
+model:
+  embed_dim: 512
+  depth: 12
+  num_heads: 8
+  mlp_ratio: 4.0
+  patch_size: 4
+  dropout: 0.0
+  attn_dropout: 0.0
+  max_time_index: 14
+  use_coord_features: true
+
+training:
+  epochs: 50
+  resume_from: null
+  lr: 3.0e-4
+  weight_decay: 1.0e-4
+  warmup_steps: 1000
+  grad_clip: 1.0
+  mixed_precision: bf16
+  log_every: 200
+  val_every: 10000
+  checkpoint_every: 10000
+
+budget:
+  target_params: 38000000
+  tolerance: 1000000
+
+wandb:
+  enabled: false
+  project: phaedra
+  entity: null
+  run_name: vit_38m_kh
+  mode: offline
+
+validation:
+  max_batches: 16
+  max_plots: 6
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_kh"
+
+testing:
+  checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_kh"
+  max_plots: 8
+  split: test
+  max_members: null
+  input_time_idx: 0
+  final_time_idx: 14
+  timing_samples: 50
+  source_fields_path: "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_KelvinHelmholtzLowRes.nc"
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_kh/test"
+  rollouts:
+    - name: direct_0_to_14
+      display_name: Direct 0->14
+      schedule: [0, 14]
+    - name: step_2_rollout
+      display_name: Step-2 Rollout
+      step: 2
+    - name: step_6_rollout
+      display_name: Step-6 Rollout
+      step: 6
+
+runtime:
+  seed: 42
+  tf32: true

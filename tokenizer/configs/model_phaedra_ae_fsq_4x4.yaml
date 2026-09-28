@@ -1,0 +1,70 @@
+var_tokenizer_hyperparameters:
+  vae_hyperparameters:
+    input_channels: 1
+    encoder_channel_mult: [2, 2, 4] # [1, 1, 2, 2, 4] has max 8x8 tokens; doubles with each number removed
+    decoder_channel_mult: [2, 2, 4]
+    num_res_blocks: 4
+    attn_resolutions: [16, 32]
+    input_h: 128
+    input_w: 128 
+    latent_channels: 128
+    dropout: 0.0
+    double_z: false
+  fsq_hyperparameters:
+    fsq_L: [5, 4, 4, 3, 3, 3, 2, 2]
+    codebook_embed_dim: 9
+    fsq_scale: 10.0
+  ct_hyperparameters:
+    quantizer: "FSQ"
+    continuous_scale: 0.1
+    continuous_L: 1024
+    use_entropy_loss: true
+    quantizer_commit_loss_beta: 0.1
+  conv_hyperparameters:
+    quant_conv_ks: 3
+codebook_size: 8640
+
+training_hyperparameters:
+  lr: 0.0001
+  beta1: 0.5
+  beta2: 0.9
+  beta3: 0.99
+  alpha: 2.0
+  beta3_warmup: 250
+  alpha_warmup: 250
+  weight_decay: 0.01
+  ema: 0.999
+  cosine_t_max: 100000 # cosine scheduler period
+  cosine_eta_min: 1e-7
+  epochs: 1
+  logging_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4/logs"
+  checkpoint_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4/checkpoints"
+  test_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4/test"
+  log_every: 50
+  val_every: 50
+  all_processes: false
+  enable_wandb: false
+  experiment_name: "Phaedra_AE_FSQ_4x4"
+  fp16: true
+  grad_accum_steps: 2
+  load_from_checkpoint: null # set to a step number to resume <checkpoint_dir>/<experiment_name>_<step>
+
+# Additional DataLoader specific kwargs not covered above
+system_config:
+  # copy_to: null
+  copy_to: null
+  dataset_args: []  # List of positional arguments
+  dataset_kwargs: {}
+  dataloader_kwargs:
+    # DataLoader configuration
+    num_workers: 4
+    batch_size: 8
+    shuffle: false
+    pin_memory: true
+    drop_last: true
+    persistent_workers: false
+    prefetch_factor: 2
+    timeout: 0.0
+    worker_init_fn: null
+    multiprocessing_context: null  # e.g., "spawn", "fork", "forkserver"
+    generator: null

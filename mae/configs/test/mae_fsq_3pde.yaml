@@ -1,0 +1,25 @@
+# Evaluation of mae_fsq_3pde with the protocol of the paper's run: dataset 'rkh',
+# first 10 test trajectories, all timesteps. Masks are drawn with --seed (default 0).
+mae_train_config: "mae/configs/mae_fsq_3pde.yaml"
+data_configs:
+  - "tokens/configs/ceu_kh.yaml"
+  - "tokens/configs/ceu_rkh.yaml"
+  - "tokens/configs/ceu_rc.yaml"
+source_datasets:
+  - "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_KelvinHelmholtzLowRes.nc"
+  - "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannKelvinHelmholtzLowRes.nc"
+  - "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannCurvedLowRes.nc"
+dataset_id: 1
+checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_fsq_3pde"
+output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_fsq_3pde/test_eval"
+device: "cuda"
+mae_use_ema: false
+max_test_members: 10
+time_indices: null
+plot_time_indices: "10"
+max_plots: 4
+
+tokenizer:
+  model_name: "AE_FSQ"
+  model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/fsq"
+  use_ema: true

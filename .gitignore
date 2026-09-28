@@ -8,18 +8,18 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
+/build/
+/develop-eggs/
+/dist/
+/downloads/
+/eggs/
 .eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
+/lib/
+/lib64/
+/parts/
+/sdist/
+/var/
+/wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -81,16 +81,16 @@ dmypy.json
 .pyre/
 
 # Training outputs
-checkpoints/
-logs/
-outputs/
+/checkpoints/
+/logs/
+/outputs/
 wandb/
 *.pt
 *.pth
 *.ckpt
 
 # Data files
-data/
+/data/
 *.h5
 *.hdf5
 *.nc
@@ -106,12 +106,16 @@ slurm-*.out
 Thumbs.db
 
 # Temporary files
-tmp/
-temp/
+/tmp/
+/temp/
 *.tmp
 *.bak
 
-# Build artifacts
-*.egg-info/
-__pycache__/
-*.pyc
+# Local environment (copy env.example.sh -> env.sh and edit the roots)
+env.sh
+
+# Weights and datasets live under $PHAEDRA_OUTPUT_ROOT / $PHAEDRA_DATA_ROOT, never in the repo
+*.safetensors
+*.bin
+*.npz
+*.err

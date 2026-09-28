@@ -1,0 +1,98 @@
+model_type: seq2seq
+
+dataset:
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/phaedra/CEU2D_RiemannKelvinHelmholtzTokens.nc"
+  token_type: phaedra
+  variable_order: [rho, u, v, p]
+  input_variables: [rho, u, v, p]
+  output_variables: [rho, u, v, p]
+  split_train: train
+  split_val: val
+  pair_mode_train: all_even_forward
+  pair_mode_val: fixed
+  time_start: 0
+  time_end: 14
+  time_step: 2
+  fixed_input_time: 0
+  fixed_output_time: 14
+  max_train_members: null
+  max_val_members: null
+  num_workers: 8
+  batch_size_train: 32
+  batch_size_val: 8
+  amp_vocab_size: 1024
+  morph_vocab_size: 8640
+
+model:
+  grid_size: 32
+  embed_dim: 288
+  encoder_depth: 19
+  amp_decoder_depth: 5
+  morph_decoder_depth: 5
+  num_heads: 8
+  mlp_ratio: 4
+  fusion: concat
+  layerscale_init: 1.0e-5
+  max_time_index: 14
+  problem_type_embed_scale: 1.0
+
+training:
+  epochs: 100
+  lr: 4.0e-4
+  weight_decay: 0.01
+  warmup_steps: 1000
+  focal_gamma: 2.0
+  focal_alpha: null
+  grad_clip: 1.0
+  mixed_precision: bf16
+  log_every: 20
+  val_every: 200
+  checkpoint_every: 1000
+  resume_from: null
+
+budget:
+  target_params: 38000000
+  tolerance: 4000000
+
+wandb:
+  enabled: false
+  project: phaedra
+  entity: null
+  run_name: phaedra_38m_rkh
+  mode: offline
+
+validation:
+  max_batches: 16
+  max_plots: 8
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_rkh"
+  decoder_enabled: true
+  model_name: Phaedra_AE_FSQ_4x4
+  model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4"
+  use_ema: true
+
+testing:
+  split: test
+  checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_rkh"
+  max_plots: 2
+  max_members: null
+  input_time_idx: 0
+  final_time_idx: 14
+  timing_samples: 50
+  source_fields_path: "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannKelvinHelmholtzLowRes.nc"
+  dataset_name: ceu_rkh
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_rkh/test"
+  rollouts:
+    # - name: direct_0_to_14
+    #   display_name: Direct 0->14
+    #   schedule: [0, 14]
+    # - name: step_2_rollout
+    #   display_name: Step-2 Rollout
+    #   step: 2
+    - name: step_6_rollout
+      display_name: Step-6 Rollout
+      step: 6
+
+runtime:
+  seed: 42
+  ddp: false
+  tf32: true

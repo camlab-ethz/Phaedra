@@ -1,0 +1,432 @@
+datasets:
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_KelvinHelmholtzLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["rho"]
+    field_variables_out: ["rho"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.75000
+    _normalization_std: 0.22776
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_KelvinHelmholtzLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: -0.016416
+    _normalization_std: 0.112602
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_KelvinHelmholtzLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.00005
+    _normalization_std: 0.044217
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_KelvinHelmholtzLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["p"]
+    field_variables_out: ["p"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0 
+    _normalization_mean: 1.000
+    _normalization_std: 0.0083488
+
+  # CEU Riemann
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: "train"
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["rho"]
+    field_variables_out: ["rho"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0 
+    _normalization_mean: 1.25204
+    _normalization_std: 0.54691
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.008658
+    _normalization_std: 0.258274
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.00598424
+    _normalization_std: 0.256082
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["p"]
+    field_variables_out: ["p"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.208898
+    _normalization_std: 0.114176
+
+
+  # CEU Gauss
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_GaussLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: "train"
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["rho"]
+    field_variables_out: ["rho"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0 
+    _normalization_mean: 1.000
+    _normalization_std: 0.120093
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_GaussLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.000182
+    _normalization_std: 0.589859
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_GaussLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.000
+    _normalization_std: 0.58203
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_GaussLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["p"]
+    field_variables_out: ["p"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 2.51268
+    _normalization_std: 0.414882
+
+  # CEU Riemann Curved
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannCurvedLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: "train"
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["rho"]
+    field_variables_out: ["rho"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0 
+    _normalization_mean: 0.551906
+    _normalization_std: 0.323048
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannCurvedLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.00042
+    _normalization_std: 0.275455
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannCurvedLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.0026327
+    _normalization_std: 0.275455
+  - _target_: "StructuredDatasetConfig"
+    name: "CEU_2D_RiemannCurvedLowRes"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["p"]
+    field_variables_out: ["p"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.552022
+    _normalization_std: 0.169886
+
+  # IEU Gauss
+  - _target_: "StructuredDatasetConfig"
+    name: "IEU_2D_Gauss"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.0
+    _normalization_std: 0.61475
+  - _target_: "StructuredDatasetConfig"
+    name: "IEU_2D_Gauss"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.0
+    _normalization_std: 0.607624
+  
+  # IEU Sines
+  - _target_: "StructuredDatasetConfig"
+    name: "IEU_2D_Sin"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["u"]
+    field_variables_out: ["u"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.0
+    _normalization_std: 0.335339
+  - _target_: "StructuredDatasetConfig"
+    name: "IEU_2D_Sin"
+    path: "${oc.env:PHAEDRA_DATA_ROOT}/fields"
+    spatial_dimensions: 2
+    split: null
+    resolution: [128, 128]
+    time_dimension: true
+    num_samples: null
+    max_num_val_samples: 120
+    max_num_test_samples: 240
+    field_variables_in: ["v"]
+    field_variables_out: ["v"]
+    scalar_variables_in: null
+    scalar_variables_out: null
+    max_physical_lead_time: 0
+    time_mode: "all2all"
+    time_subsample: 1
+    time_history: 0
+    time_history_padding: 0.0
+    _normalization_mean: 0.0
+    _normalization_std: 0.334732

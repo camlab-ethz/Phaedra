@@ -1,0 +1,21 @@
+# Evaluation of mae_phaedra_finetune_rkh with the protocol of the paper's run: dataset 'rkh',
+# first 10 test trajectories, timesteps 1..20. Masks are drawn with --seed (default 0).
+mae_train_config: "mae/configs/mae_phaedra_finetune_rkh.yaml"
+data_configs:
+  - "tokens/configs/ceu_rkh.yaml"
+source_datasets:
+  - "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannKelvinHelmholtzLowRes.nc"
+dataset_id: 0
+checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_phaedra_finetune_rkh"
+output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_phaedra_finetune_rkh/test_eval"
+device: "cuda"
+mae_use_ema: false
+max_test_members: 10
+time_indices: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20'
+plot_time_indices: "20"
+max_plots: 4
+
+tokenizer:
+  model_name: "Phaedra_AE_FSQ_4x4"
+  model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4"
+  use_ema: true

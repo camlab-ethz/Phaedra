@@ -1,0 +1,22 @@
+model,model_id,dataset,direct,rollout2,rollout662,best
+FNO,fno_38m_kh,KH,13.0991,13.3169,12.5501,rollout662
+FNO,fno_38m_rc,RC,42.8039,35.9475,35.6264,rollout662
+FNO,fno_38m_rkh,RKH,18.5885,17.9836,16.6589,rollout662
+CNO,cno_38m_kh,KH,11.7187,10.1502,10.1526,rollout2
+CNO,cno_38m_rc,RC,41.2277,29.9229,32.0960,rollout2
+CNO,cno_38m_rkh,RKH,15.8380,12.4105,11.8224,rollout662
+ViT,vit_38m_kh,KH,9.7112,9.6798,9.1815,rollout662
+ViT,vit_38m_rc,RC,39.6792,70.1856,48.7124,direct
+ViT,vit_38m_rkh,RKH,15.8865,15.0551,13.1952,rollout662
+Continuous Transformer,continuous_38m_kh,KH,9.4153,10.2466,9.2791,rollout662
+Continuous Transformer,continuous_38m_rc,RC,119.0509,147.4207,150.2340,direct
+Continuous Transformer,continuous_38m_rkh,RKH,11.8467,18.7946,11.5609,rollout662
+VQ-VAE-2,vqvae2_38m_kh,KH,15.2832,20.3885,15.1438,rollout662
+VQ-VAE-2,vqvae2_38m_rc,RC,42.3955,63.7351,44.5885,direct
+VQ-VAE-2,vqvae2_38m_rkh,RKH,26.0020,37.8035,24.5193,rollout662
+FSQ,fsq_38m_kh,KH,11.9932,13.2836,11.2757,rollout662
+FSQ,fsq_38m_rc,RC,42.2139,39.2900,38.0473,rollout662
+FSQ,fsq_38m_rkh,RKH,18.5455,28.5882,17.9908,rollout662
+Phaedra,phaedra_38m_kh,KH,9.5023,12.1373,9.7133,direct
+Phaedra,phaedra_38m_rc,RC,28.8717,34.9454,27.2079,rollout662
+Phaedra,phaedra_38m_rkh,RKH,12.2703,13.6161,10.2297,rollout662

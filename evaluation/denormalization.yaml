@@ -1,0 +1,25 @@
+# Physical-space per-variable (mean, std) used to denormalize decoded fields in
+# hub.trainers.test. These are the SAME statistics the tokens/latents were
+# generated with (tokens/configs/*.yaml, tokenizer/configs/data_pretraining.yaml).
+denormalization:
+  name_aliases:
+    ceu_kh: "ceu_2d_kelvinhelmholtzlowres"
+    ceu_rc: "ceu_2d_riemanncurvedlowres"
+    ceu_crp: "ceu_2d_riemanncurvedlowres"
+    ceu_rkh: "ceu_2d_riemannkelvinhelmholtzlowres"
+    ceu2d_kelvinhelmholtztokens: "ceu_2d_kelvinhelmholtzlowres"
+    ceu2d_riemanncurvedtokens: "ceu_2d_riemanncurvedlowres"
+    ceu2d_riemannkelvinhelmholtztokens: "ceu_2d_riemannkelvinhelmholtzlowres"
+  datasets:
+    - name: "CEU_2D_KelvinHelmholtzLowRes"
+      field_variables_out: ["rho", "u", "v", "p"]
+      _normalization_mean: [0.75, -0.016416, 0.00005, 1.0]
+      _normalization_std: [0.22776, 0.112602, 0.044217, 0.0083488]
+    - name: "CEU_2D_RiemannCurvedLowRes"
+      field_variables_out: ["rho", "u", "v", "p"]
+      _normalization_mean: [0.548238, 0.00042, 0.0026327, 0.552022]
+      _normalization_std: [0.322666, 0.275455, 0.275455, 0.169886]
+    - name: "CEU_2D_RiemannKelvinHelmholtzLowRes"
+      field_variables_out: ["rho", "u", "v", "p"]
+      _normalization_mean: [0.54368621, -0.00332036, 0.00215155, 0.5488216]
+      _normalization_std: [0.36185354, 0.21069140, 0.2153050, 0.19982270]

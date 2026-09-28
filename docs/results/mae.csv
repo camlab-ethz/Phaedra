@@ -1,0 +1,9 @@
+model_id,tokens,training,evaluated_on,test_trajectories,rho,u,v,p,average
+mae_phaedra_3pde,Phaedra,pre-trained on KH + RC + RKH,RKH,10,11.2417,25.8570,22.8600,5.7765,16.4338
+mae_fsq_3pde,FSQ,pre-trained on KH + RC + RKH,RKH,10,11.8289,26.2815,23.4363,6.1052,16.9130
+mae_phaedra_finetune_kh,Phaedra,fine-tuned on KH (from the 3-PDE model),KH,10,1.9333,3.8193,12.9371,0.3336,4.7558
+mae_fsq_finetune_kh,FSQ,fine-tuned on KH (from the 3-PDE model),KH,1,2.2540,4.9041,17.5174,0.4778,6.2883
+mae_phaedra_finetune_rc,Phaedra,fine-tuned on RC (from the 3-PDE model),RC,10,15.9085,33.6186,32.0251,7.1415,22.1734
+mae_fsq_finetune_rc,FSQ,fine-tuned on RC (from the 3-PDE model),RC,1,23.1391,41.9918,37.1926,10.4580,28.1954
+mae_phaedra_finetune_rkh,Phaedra,fine-tuned on RKH (from the 3-PDE model),RKH,10,4.8667,11.4782,10.1929,2.5491,7.2717
+mae_fsq_finetune_rkh,FSQ,fine-tuned on RKH (from the 3-PDE model),RKH,1,4.2112,9.2161,12.5986,2.2339,7.0650

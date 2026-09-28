@@ -9,6 +9,7 @@ preserving both structural patterns and continuous value distributions.
 """
 
 from .phaedra_model import PhaedraModel
+from .pretrained import load_pretrained
 from .phaedra_layer import ContinuousTokenizerLayer
 from .task_phaedra import PhaedraSystem
 from .base_task import BaseTaskModel
@@ -20,6 +21,7 @@ __author__ = "Levi Lingsch, Georgios Kissas, Johannes Jakubik, Siddhartha Mishra
 
 __all__ = [
     "PhaedraModel",
+    "load_pretrained",
     "PhaedraSystem", 
     "ContinuousTokenizerLayer",
     "BaseTaskModel",

@@ -3,7 +3,8 @@ reproduced below. These notices must be preserved in source and binary
 redistributions.
 
 ================================================================================
-Finite Scalar Quantization (src/fsq_quant.py)
+Finite Scalar Quantization (phaedra/fsq_quant.py and its copy
+tokenizer/model/building_blocks/quantizers/fsq_quant.py)
 
 Adapted from lucidrains' vector-quantize-pytorch
 (https://github.com/lucidrains/vector-quantize-pytorch),

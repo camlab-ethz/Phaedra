@@ -1,0 +1,37 @@
+\begin{table}[h]
+    \centering
+    \caption{Per-variable relative $L_1$ errors at final time step ($t=0.7$), 2-step rollout.}
+    \begin{tabular}{llccccccc}
+        \toprule
+        Model & Dataset  & $\rho$ & $u$ & $v$ & $p$ & Average & Strategy & CI$_{95}$ \\
+        \midrule
+        FNO & KH & 6.49 & 11.87 & 34.36 & 0.55 & 13.32 & 2-step & $\pm0.44$ \\
+        FNO & RC & 27.26 & 53.85 & 53.65 & 9.03 & 35.95 & 2-step & $\pm0.71$ \\
+        FNO & RKH & 11.14 & 28.33 & 27.60 & 4.87 & 17.98 & 2-step & $\pm0.94$ \\
+        \midrule
+        CNO & KH & 5.06 & 9.10 & 25.93 & 0.51 & 10.15 & 2-step & $\pm0.32$ \\
+        CNO & RC & 22.65 & 44.44 & 44.66 & 7.94 & \textbf{29.92} & 2-step & $\pm0.74$ \\
+        CNO & RKH & 7.40 & 19.61 & 19.30 & 3.32 & \textbf{12.41} & 2-step & $\pm0.76$ \\
+        \midrule
+        ViT & KH & 4.87 & 8.69 & 24.70 & 0.46 & \textbf{9.68} & 2-step & $\pm0.29$ \\
+        ViT & RC & 43.09 & 117.59 & 101.40 & 18.67 & 70.19 & 2-step & $\pm1.80$ \\
+        ViT & RKH & 10.43 & 23.95 & 22.05 & 3.79 & 15.06 & 2-step & $\pm0.91$ \\
+        \midrule
+        Continuous Transformer & KH & 5.15 & 9.16 & 26.05 & 0.61 & 10.25 & 2-step & $\pm0.32$ \\
+        Continuous Transformer & RC & 99.90 & 241.06 & 203.20 & 45.52 & 147.42 & 2-step & $\pm2.14$ \\
+        Continuous Transformer & RKH & 11.45 & 29.63 & 28.79 & 5.31 & 18.79 & 2-step & $\pm0.80$ \\
+        \midrule
+        VQ-VAE-2 & KH & 9.92 & 18.61 & 52.33 & 0.70 & 20.39 & 2-step & $\pm0.61$ \\
+        VQ-VAE-2 & RC & 50.00 & 94.25 & 94.11 & 16.57 & 63.74 & 2-step & $\pm1.46$ \\
+        VQ-VAE-2 & RKH & 21.61 & 57.85 & 57.37 & 14.39 & 37.80 & 2-step & $\pm1.47$ \\
+        \midrule
+        FSQ & KH & 6.28 & 12.52 & 33.70 & 0.63 & 13.28 & 2-step & $\pm0.39$ \\
+        FSQ & RC & 29.21 & 58.46 & 58.63 & 10.86 & 39.29 & 2-step & $\pm0.58$ \\
+        FSQ & RKH & 16.35 & 43.01 & 46.81 & 8.19 & 28.59 & 2-step & $\pm1.60$ \\
+        \midrule
+        Phaedra & KH & 5.96 & 10.76 & 31.28 & 0.55 & 12.14 & 2-step & $\pm0.36$ \\
+        Phaedra & RC & 25.89 & 52.58 & 52.10 & 9.22 & 34.95 & 2-step & $\pm0.68$ \\
+        Phaedra & RKH & 8.74 & 21.27 & 20.55 & 3.91 & 13.62 & 2-step & $\pm0.94$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}

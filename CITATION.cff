@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper."
+title: "Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences"
+authors:
+  - family-names: Lingsch
+    given-names: Levi
+  - family-names: Kissas
+    given-names: Georgios
+  - family-names: Jakubik
+    given-names: Johannes
+  - family-names: Mishra
+    given-names: Siddhartha
+repository-code: "https://github.com/camlab-ethz/Phaedra"
+url: "https://camlab-ethz.github.io/Phaedra/"
+license: MIT
+identifiers:
+  - type: doi
+    value: 10.48550/arXiv.2602.03915
+    description: arXiv
+preferred-citation:
+  type: conference-paper
+  title: "Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences"
+  authors:
+    - family-names: Lingsch
+      given-names: Levi
+    - family-names: Kissas
+      given-names: Georgios
+    - family-names: Jakubik
+      given-names: Johannes
+    - family-names: Mishra
+      given-names: Siddhartha
+  collection-title: "Advances in Neural Information Processing Systems"
+  year: 2026
+  url: "https://arxiv.org/abs/2602.03915"

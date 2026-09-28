@@ -1,0 +1,57 @@
+dataset:
+  token_type: "fsq"
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/fsq/CEU2D_KelvinHelmholtzTokens.nc"
+  variables: ["rho", "u", "v", "p"]
+  split: "train"
+  num_workers: 4
+  copy_to_tmp: true
+  tmp_dir: null
+
+training:
+  batch_size: 64
+  epochs: 50
+  lr: 0.0005
+  weight_decay: 0.01
+  warmup_steps: 2500
+  mask_ratio: 0.75
+  amp_loss_weight: 10.0
+  warm_start_from: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_fsq_3pde"
+  log_every: 20
+  val_every: 200
+  checkpoint_every: 2000
+  resume_from: null
+  mixed_precision: "bf16"
+  sdp_mode: "auto"
+  tf32: true
+
+model:
+  embed_dim: 512
+  encoder_depth: 8
+  decoder_depth: 4
+  num_heads: 8
+  mlp_ratio: 4
+  fusion: "concat"
+  layerscale_init: 1.0e-5
+
+validation:
+  split: "val"
+  samples: 4
+  time_index: 10
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/mae/mae_fsq_finetune_kh"
+
+wandb:
+  enabled: false
+  project: "phaedra-mae"
+  entity: null
+  name: "mae_fsq_finetune_kh"
+
+ema:
+  enabled: true
+  decay: 0.9999
+  use_for_eval: false
+
+decoder:
+  enabled: true
+  model_name: "AE_FSQ"
+  model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/fsq"
+  use_ema: true

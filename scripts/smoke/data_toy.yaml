@@ -1,0 +1,7 @@
+# Tokenizer data config for the smoke test: the three toy files written by
+# scripts/make_toy_dataset.py (64 members: 48 train / 8 val / 8 test).
+datasets:
+  - { name: CEU_2D_KelvinHelmholtzLowRes,        path: "${oc.env:PHAEDRA_DATA_ROOT}/fields", field_variables_in: [rho], _normalization_mean: 0.75,     _normalization_std: 0.22776,  max_num_val_samples: 8, max_num_test_samples: 8 }
+  - { name: CEU_2D_KelvinHelmholtzLowRes,        path: "${oc.env:PHAEDRA_DATA_ROOT}/fields", field_variables_in: [u],   _normalization_mean: -0.016416, _normalization_std: 0.112602, max_num_val_samples: 8, max_num_test_samples: 8 }
+  - { name: CEU_2D_RiemannCurvedLowRes,          path: "${oc.env:PHAEDRA_DATA_ROOT}/fields", field_variables_in: [rho], _normalization_mean: 0.548238, _normalization_std: 0.322666, max_num_val_samples: 8, max_num_test_samples: 8 }
+  - { name: CEU_2D_RiemannKelvinHelmholtzLowRes, path: "${oc.env:PHAEDRA_DATA_ROOT}/fields", field_variables_in: [p],   _normalization_mean: 0.5488216, _normalization_std: 0.1998227, max_num_val_samples: 8, max_num_test_samples: 8 }

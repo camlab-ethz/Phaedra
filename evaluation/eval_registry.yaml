@@ -1,0 +1,130 @@
+# Model + dataset registry for the evaluation harness (evaluation/eval_downstream.py).
+# Every model entry: family selects the loader/predict path in eval_downstream.py.
+# Datasets give token paths (per tokenizer), source fields, and denorm stats
+# (verified values; RC stats are the post-fix ones).
+
+datasets:
+  kh:
+    phaedra_tokens: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/phaedra/CEU2D_KelvinHelmholtzTokens.nc"
+    fsq_tokens:     "${oc.env:PHAEDRA_DATA_ROOT}/tokens/fsq/CEU2D_KelvinHelmholtzTokens.nc"
+    vqvae2_tokens:  "${oc.env:PHAEDRA_DATA_ROOT}/tokens/vqvae2/CEU2D_KelvinHelmholtzTokens.nc"
+    source_fields:  "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_KelvinHelmholtzLowRes.nc"
+    variables: [rho, u, v, p]
+    normalization:
+      rho: { mean: 0.75,      std: 0.22776 }
+      u:   { mean: -0.016416, std: 0.112602 }
+      v:   { mean: 0.00005,   std: 0.044217 }
+      p:   { mean: 1.0,       std: 0.0083488 }
+  rc:
+    phaedra_tokens: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/phaedra/CEU2D_RiemannCurvedTokens.nc"
+    fsq_tokens:     "${oc.env:PHAEDRA_DATA_ROOT}/tokens/fsq/CEU2D_RiemannCurvedTokens.nc"
+    vqvae2_tokens:  "${oc.env:PHAEDRA_DATA_ROOT}/tokens/vqvae2/CEU2D_RiemannCurvedTokens.nc"
+    source_fields:  "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannCurvedLowRes.nc"
+    variables: [rho, u, v, p]
+    normalization:
+      rho: { mean: 0.548238,  std: 0.322666 }
+      u:   { mean: 0.00042,   std: 0.275455 }
+      v:   { mean: 0.0026327, std: 0.275455 }
+      p:   { mean: 0.552022,  std: 0.169886 }
+  rkh:
+    phaedra_tokens: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/phaedra/CEU2D_RiemannKelvinHelmholtzTokens.nc"
+    fsq_tokens:     "${oc.env:PHAEDRA_DATA_ROOT}/tokens/fsq/CEU2D_RiemannKelvinHelmholtzTokens.nc"
+    vqvae2_tokens:  "${oc.env:PHAEDRA_DATA_ROOT}/tokens/vqvae2/CEU2D_RiemannKelvinHelmholtzTokens.nc"
+    source_fields:  "${oc.env:PHAEDRA_DATA_ROOT}/fields/CEU_2D_RiemannKelvinHelmholtzLowRes.nc"
+    variables: [rho, u, v, p]
+    normalization:
+      rho: { mean: 0.54368621, std: 0.36185354 }
+      u:   { mean: -0.00332036, std: 0.21069140 }
+      v:   { mean: 0.00215155,  std: 0.2153050 }
+      p:   { mean: 0.5488216,   std: 0.19982270 }
+
+decoders:
+  # Trained tokenizer checkpoints (directory with pytorch_model.bin + ema.pt, as
+  # written by `python -m tokenizer.train`). The model configs are packaged
+  # under tokenizer/configs and resolved from model_name.
+  phaedra:    { model_name: Phaedra_AE_FSQ_4x4, model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/phaedra_4x4", use_ema: true }
+  fsq:        { model_name: AE_FSQ,             model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/fsq",         use_ema: true }
+  vqvae2:     { model_name: AE_VQVAE2,          model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/vqvae2",      use_ema: true }
+  continuous: { model_name: AE_Continuous,      model_path: "${oc.env:PHAEDRA_OUTPUT_ROOT}/tokenizers/continuous",  use_ema: true }
+
+models:
+  # `checkpoint` is a run directory: released weights (model.safetensors, downloaded
+  # with scripts/download_pretrained.py) or your own training output (checkpoint_last.pt)
+  # -- the loader picks whichever is present. Configs double as the build recipe.
+  #
+  # Released checkpoints that are not the final training step (disclosed in the paper):
+  #   phaedra_38m_rkh     step 56000 (epoch 53) -- selected over the final step 58000
+  #   continuous_38m_rkh  epoch 59 -- the run diverged after epoch ~63 (val latent-L1
+  #                       3.24 -> 11.3); train_continuous saves checkpoint_epoch_*.pt
+
+  # ---- token transformers (Phaedra / FSQ tokens) -- python -m hub.trainers.train
+  phaedra_38m_kh: { family: hub_phaedra, dataset: kh,
+    hub_config: configs/operators/phaedra_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_kh" }
+  phaedra_38m_rc: { family: hub_phaedra, dataset: rc,
+    hub_config: configs/operators/phaedra_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_rc" }
+  phaedra_38m_rkh: { family: hub_phaedra, dataset: rkh,
+    hub_config: configs/operators/phaedra_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/phaedra_38m_rkh" }
+  fsq_38m_kh: { family: hub_fsq, dataset: kh,
+    hub_config: configs/operators/fsq_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fsq_38m_kh" }
+  fsq_38m_rc: { family: hub_fsq, dataset: rc,
+    hub_config: configs/operators/fsq_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fsq_38m_rc" }
+  fsq_38m_rkh: { family: hub_fsq, dataset: rkh,
+    hub_config: configs/operators/fsq_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fsq_38m_rkh" }
+
+  # ---- latent baselines -- continuous AE latents / VQ-VAE-2 tokens
+  continuous_38m_kh: { family: continuous, dataset: kh,
+    train_config: configs/operators/continuous_38m_kh.yaml,
+    latent_dataset: "${oc.env:PHAEDRA_DATA_ROOT}/latents/continuous/CEU2D_KelvinHelmholtzLatents.nc",
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/continuous_38m_kh" }
+  continuous_38m_rc: { family: continuous, dataset: rc,
+    train_config: configs/operators/continuous_38m_rc.yaml,
+    latent_dataset: "${oc.env:PHAEDRA_DATA_ROOT}/latents/continuous/CEU2D_RiemannCurvedLatents.nc",
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/continuous_38m_rc" }
+  continuous_38m_rkh: { family: continuous, dataset: rkh,
+    train_config: configs/operators/continuous_38m_rkh.yaml,
+    latent_dataset: "${oc.env:PHAEDRA_DATA_ROOT}/latents/continuous/CEU2D_RiemannKelvinHelmholtzLatents.nc",
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/continuous_38m_rkh" }
+  vqvae2_38m_kh: { family: arch_dual_sequential_vq2, dataset: kh,
+    op_config: configs/operators/vqvae2_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vqvae2_38m_kh" }
+  vqvae2_38m_rc: { family: arch_dual_sequential_vq2, dataset: rc,
+    op_config: configs/operators/vqvae2_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vqvae2_38m_rc" }
+  vqvae2_38m_rkh: { family: arch_dual_sequential_vq2, dataset: rkh,
+    op_config: configs/operators/vqvae2_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vqvae2_38m_rkh" }
+
+  # ---- physical-space baselines -- python -m {fno,cno,vit}_operator.train
+  fno_38m_kh: { family: fno, dataset: kh,
+    op_config: configs/operators/fno_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fno_38m_kh" }
+  fno_38m_rc: { family: fno, dataset: rc,
+    op_config: configs/operators/fno_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fno_38m_rc" }
+  fno_38m_rkh: { family: fno, dataset: rkh,
+    op_config: configs/operators/fno_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/fno_38m_rkh" }
+  cno_38m_kh: { family: cno, dataset: kh,
+    op_config: configs/operators/cno_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/cno_38m_kh" }
+  cno_38m_rc: { family: cno, dataset: rc,
+    op_config: configs/operators/cno_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/cno_38m_rc" }
+  cno_38m_rkh: { family: cno, dataset: rkh,
+    op_config: configs/operators/cno_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/cno_38m_rkh" }
+  vit_38m_kh: { family: vit, dataset: kh,
+    op_config: configs/operators/vit_38m_kh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_kh" }
+  vit_38m_rc: { family: vit, dataset: rc,
+    op_config: configs/operators/vit_38m_rc.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_rc" }
+  vit_38m_rkh: { family: vit, dataset: rkh,
+    op_config: configs/operators/vit_38m_rkh.yaml,
+    checkpoint: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vit_38m_rkh" }

@@ -1,11 +1,16 @@
-# Core dependencies
-torch>=2.0.0
-numpy>=1.21.0
-einops>=0.6.0
-omegaconf>=2.3.0
-accelerate>=0.20.0
+# Tested with Python 3.11 and torch 2.11 (CUDA 13 wheels); any torch >= 2.4 with
+# scaled_dot_product_attention works. Install the CUDA build of torch that matches your driver first.
+torch>=2.4
+numpy>=1.24
+einops>=0.6
+omegaconf>=2.3
+accelerate>=0.20
 torch-ema>=0.3
-matplotlib>=3.5.0
+matplotlib>=3.8
+netCDF4>=1.6
+scipy>=1.10
+safetensors>=0.4
+huggingface_hub>=0.23
 
 # Optional: Weights & Biases logging
 # wandb>=0.15.0

@@ -1,0 +1,22 @@
+model,model_id,dataset,t6,t12,t14
+FNO,fno_38m_kh,KH,8.2313,11.3014,12.5501
+CNO,cno_38m_kh,KH,6.7287,9.0616,10.1526
+ViT,vit_38m_kh,KH,6.0627,8.3452,9.1815
+Continuous Transformer,continuous_38m_kh,KH,6.3214,8.4311,9.2791
+VQ-VAE-2,vqvae2_38m_kh,KH,10.7992,13.3292,15.1438
+FSQ,fsq_38m_kh,KH,8.2438,10.5238,11.2757
+Phaedra,phaedra_38m_kh,KH,6.3001,8.7189,9.7133
+FNO,fno_38m_rc,RC,26.9041,33.2543,35.6264
+CNO,cno_38m_rc,RC,19.7215,29.0594,32.0960
+ViT,vit_38m_rc,RC,26.4784,41.1911,48.7124
+Continuous Transformer,continuous_38m_rc,RC,119.4027,144.8535,150.2340
+VQ-VAE-2,vqvae2_38m_rc,RC,29.2066,39.5262,44.5885
+FSQ,fsq_38m_rc,RC,22.7442,34.5726,38.0473
+Phaedra,phaedra_38m_rc,RC,13.6498,23.2593,27.2079
+FNO,fno_38m_rkh,RKH,8.9987,14.6905,16.6589
+CNO,cno_38m_rkh,RKH,5.3147,10.1470,11.8224
+ViT,vit_38m_rkh,RKH,7.8916,11.9503,13.1952
+Continuous Transformer,continuous_38m_rkh,RKH,5.4110,9.2619,11.5609
+VQ-VAE-2,vqvae2_38m_rkh,RKH,13.8628,21.1595,24.5193
+FSQ,fsq_38m_rkh,RKH,7.8509,14.3175,17.9908
+Phaedra,phaedra_38m_rkh,RKH,4.6852,8.4640,10.2297

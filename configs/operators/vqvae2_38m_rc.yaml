@@ -1,0 +1,80 @@
+# Transformer on VQ-VAE-2 tokens, RC (python -m baselines.arch.long_trainer --variant dual_sequential).
+# Same backbone as the Phaedra token transformer (embed 288, encoder 19, amplitude / morphology
+# decoders 5 + 5) with mask-free FlashAttention-2 blocks. The backbone is kept identical rather than
+# shrunk to 38M; the extra parameters are vocabulary-driven input/output layers:
+#   body (enc 19 + dec 5+5, embed 288) = 32.48M  (identical to the Phaedra transformer)
+#   token embeddings  (4096+16384)x288 =  5.90M  (Phaedra: 2.78M)
+#   output heads      288->(4096,16384) =  5.92M  (Phaedra: 2.79M)
+#   total                              = 44.30M  (Phaedra: 38.06M)
+model_type: seq2seq
+dataset:
+  path: "${oc.env:PHAEDRA_DATA_ROOT}/tokens/vqvae2/CEU2D_RiemannCurvedTokens.nc"
+  token_type: phaedra
+  variable_order: [rho, u, v, p]
+  input_variables: [rho, u, v, p]
+  output_variables: [rho, u, v, p]
+  split_train: train
+  split_val: val
+  pair_mode_train: all_even_forward
+  pair_mode_val: fixed
+  time_start: 0
+  time_end: 14
+  time_step: 2
+  fixed_input_time: 0
+  fixed_output_time: 14
+  max_train_members: null
+  max_val_members: null
+  num_workers: 8
+  prefetch_factor: 4
+  batch_size_train: 4    # ~13 GiB per GPU; 8 GPUs x 4 x accumulation 4 = global batch 128
+  batch_size_val: 16
+  amp_vocab_size: 4096
+  morph_vocab_size: 16384
+model:
+  grid_size: 32
+  embed_dim: 288
+  encoder_depth: 19
+  amp_decoder_depth: 5
+  morph_decoder_depth: 5
+  num_heads: 8
+  mlp_ratio: 4
+  fusion: concat
+  max_time_index: 14
+  problem_type_embed_scale: 1.0
+  amp_temperature: 1.0
+training:
+  epochs: 50          # recipe of the FSQ transformer; the released checkpoints stopped after 5 epochs
+  grad_accum_steps: 4
+  lr: 4.0e-4
+  weight_decay: 0.01
+  warmup_steps: 1000
+  grad_clip: 1.0
+  mixed_precision: bf16
+  log_every: 100
+  val_every_epoch: 1
+  plot_every_epoch: 0
+  checkpoint_every_epoch: 2
+  focal_gamma: 2.0
+  focal_alpha: null
+  label_smoothing: 0.0
+  mode_cycle: [B]
+  compile: true
+  compile_mode: default
+  compile_fullgraph: false
+budget:
+  target_params: 44300000   # 38M body + 6.2M vocabulary-driven input/output layers
+  tolerance_frac: 0.10
+wandb:
+  enabled: false
+  project: phaedra
+  entity: null
+  run_name: vqvae2_38m_rc
+  mode: offline
+validation:
+  max_batches: 32
+  max_plots: 0
+  decoder_enabled: false
+  output_dir: "${oc.env:PHAEDRA_OUTPUT_ROOT}/operators/vqvae2_38m_rc"
+runtime:
+  seed: 42
+  tf32: true

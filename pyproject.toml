@@ -19,22 +19,26 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-keywords = ["tokenization", "physical sciences", "deep learning", "quantization"]
-requires-python = ">=3.9"
+keywords = ["tokenization", "physical sciences", "deep learning", "quantization", "operator learning", "PDE"]
+requires-python = ">=3.10"
 dependencies = [
-    "torch>=2.0.0",
-    "numpy>=1.21.0",
-    "einops>=0.6.0",
-    "omegaconf>=2.3.0",
-    "accelerate>=0.20.0",
+    "torch>=2.4",
+    "numpy>=1.24",
+    "einops>=0.6",
+    "omegaconf>=2.3",
+    "accelerate>=0.20",
     "torch-ema>=0.3",
-    "matplotlib>=3.5.0",
+    "matplotlib>=3.8",
+    "netCDF4>=1.6",
+    "scipy>=1.10",
+    "safetensors>=0.4",
+    "huggingface_hub>=0.23",
 ]
 
 [project.optional-dependencies]
@@ -55,7 +59,7 @@ all = [
 
 [project.urls]
 Homepage = "https://github.com/camlab-ethz/Phaedra"
-Documentation = "https://github.com/camlab-ethz/Phaedra#readme"
+Documentation = "https://camlab-ethz.github.io/Phaedra/"
 Repository = "https://github.com/camlab-ethz/Phaedra"
 Issues = "https://github.com/camlab-ethz/Phaedra/issues"
 
@@ -64,11 +68,16 @@ phaedra-train = "phaedra.train:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
+# Only the standalone tokenizer package is installed; the reproduction code (tokenizer/, tokens/, hub/,
+# baselines/, *_operator/, mae/, evaluation/) runs from the repository checkout (`source env.sh`).
 include = ["phaedra*"]
+
+[tool.setuptools.package-data]
+phaedra = ["*.yaml"]
 
 [tool.black]
 line-length = 100
-target-version = ["py39", "py310", "py311"]
+target-version = ["py310", "py311", "py312"]
 
 [tool.isort]
 profile = "black"
@@ -77,10 +86,10 @@ line_length = 100
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --cov=phaedra --cov-report=term-missing"
+addopts = "-q"
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
