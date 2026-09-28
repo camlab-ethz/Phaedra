@@ -4,7 +4,8 @@ window.HELP_IMPROVE_VIDEOJS = false;
 function toggleMoreWorks() {
     const dropdown = document.getElementById('moreWorksDropdown');
     const button = document.querySelector('.more-works-btn');
-    
+    if (!dropdown || !button) return;
+
     if (dropdown.classList.contains('show')) {
         dropdown.classList.remove('show');
         button.classList.remove('active');
@@ -20,7 +21,7 @@ document.addEventListener('click', function(event) {
     const dropdown = document.getElementById('moreWorksDropdown');
     const button = document.querySelector('.more-works-btn');
     
-    if (container && !container.contains(event.target)) {
+    if (container && dropdown && button && !container.contains(event.target)) {
         dropdown.classList.remove('show');
         button.classList.remove('active');
     }
@@ -31,8 +32,8 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         const dropdown = document.getElementById('moreWorksDropdown');
         const button = document.querySelector('.more-works-btn');
-        dropdown.classList.remove('show');
-        button.classList.remove('active');
+        if (dropdown) dropdown.classList.remove('show');
+        if (button) button.classList.remove('active');
     }
 });
 
@@ -83,6 +84,7 @@ function scrollToTop() {
 // Show/hide scroll to top button
 window.addEventListener('scroll', function() {
     const scrollButton = document.querySelector('.scroll-to-top');
+    if (!scrollButton) return;
     if (window.pageYOffset > 300) {
         scrollButton.classList.add('visible');
     } else {
@@ -131,11 +133,14 @@ $(document).ready(function() {
 		autoplaySpeed: 5000,
     }
 
-	// Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
-	
-    bulmaSlider.attach();
-    
+	// Initialize all div with carousel class (the carousel / slider scripts are optional)
+    if (typeof bulmaCarousel !== 'undefined') {
+        bulmaCarousel.attach('.carousel', options);
+    }
+    if (typeof bulmaSlider !== 'undefined') {
+        bulmaSlider.attach();
+    }
+
     // Setup video autoplay for carousel
     setupVideoCarouselAutoplay();
 

@@ -3,18 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
   <meta name="title" content="Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences">
-  <meta name="description" content="Phaedra: A novel tokenizer inspired by shape-gain quantization and proper orthogonal decomposition, designed for high-fidelity PDE reconstruction and out-of-distribution generalization in the physical sciences.">
-  <meta name="keywords" content="Phaedra, Discrete Tokenization, Physical Sciences, Machine Learning, PDEs, Scientific AI, ETH Zurich">
+  <meta name="description" content="Phaedra (NeurIPS 2026): a tokenizer for scientific fields inspired by shape-gain quantization and proper orthogonal decomposition. High-fidelity PDE reconstruction, out-of-distribution generalization, and neural operators and masked autoencoders trained on its tokens. Code, models and tokenized datasets are public.">
+  <meta name="keywords" content="Phaedra, Discrete Tokenization, Physical Sciences, Neural Operators, PDEs, Masked Autoencoders, Scientific Machine Learning, NeurIPS 2026, ETH Zurich">
   <meta name="author" content="Levi Lingsch, Georgios Kissas, Johannes Jakubik, Siddhartha Mishra">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="CAM Lab - ETH Zurich">
-  <meta property="og:title" content="Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences">
-  <meta property="og:description" content="Investigating the accuracy of image tokenizers for scientific data and proposing Phaedra for high-fidelity PDE reconstruction.">
-  <meta property="og:url" content="https://camlab-ethz.github.io/Phaedra/"> <meta property="og:image" content="static/images/teaser.gif">
+  <meta property="og:title" content="Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences (NeurIPS 2026)">
+  <meta property="og:description" content="A tokenizer for scientific fields that keeps physical magnitudes: high-fidelity reconstruction, and neural operators and masked autoencoders trained on its tokens.">
+  <meta property="og:url" content="https://camlab-ethz.github.io/Phaedra/">
+  <meta property="og:image" content="https://camlab-ethz.github.io/Phaedra/static/videos/phaedra_tokens_rho_poster.jpg">
+  <meta name="twitter:card" content="summary_large_image">
 
   <meta name="citation_title" content="Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences">
   <meta name="citation_author" content="Lingsch, Levi">
@@ -22,19 +24,23 @@
   <meta name="citation_author" content="Jakubik, Johannes">
   <meta name="citation_author" content="Mishra, Siddhartha">
   <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="Advances in Neural Information Processing Systems">
+  <meta name="citation_arxiv_id" content="2602.03915">
   <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2602.03915.pdf">
 
-  <title>Phaedra: High-Fidelity Discrete Tokenization for Physical Sciences</title>
-  
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <title>Phaedra: High-Fidelity Discrete Tokenization for the Physical Sciences</title>
+
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/results.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  
+
   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script defer src="static/js/index.js"></script>
+  <script defer src="static/js/results.js"></script>
 
   <script>
     window.MathJax = {
@@ -85,6 +91,8 @@
               <span class="author-block"><sup>1</sup>ETH AI Center, <sup>2</sup>IBM Research Europe, <sup>3</sup> SAM ETH Zurich,  <sup>4</sup>SDSC</span>
             </div>
 
+            <div class="publication-venue">NeurIPS 2026</div>
+
             <div class="column has-text-centered">
               <div class="publication-links">
                 <span class="link-block">
@@ -105,7 +113,20 @@
                     <span>arXiv</span>
                   </a>
                 </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/llingsch/phaedra" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">&#129303;</span>
+                    <span>Models</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/llingsch/phaedra-tokens" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">&#129303;</span>
+                    <span>Tokenized data</span>
+                  </a>
+                </span>
               </div>
+              <a class="news-banner" href="#operators">New: neural operators and masked autoencoders on Phaedra tokens, with all code, weights and data</a>
             </div>
           </div>
         </div>
@@ -116,16 +137,16 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="video-container">
-        <video autoplay loop muted playsinline poster="assets/dashboard_preview.jpg">
+        <video autoplay loop muted playsinline>
             <source src="static/images/phaedra_dashboard.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="video-caption-box">
           <p>
-            <strong>Disentangled Latent Control:</strong> Phaedra factorizes fields into independent 
-            $z_\mu$ (Morphology) and $z_\alpha$ (Amplitude) tokens. By combining, for example, the local vortices 
-            from Sample B ($z_{\mu,B}$) with the global magnitude profile of Sample A ($z_{\alpha,A}$), 
-            the reconstruction maintains the <strong>fine-scale turbulent structure</strong> of one 
+            <strong>Disentangled Latent Control:</strong> Phaedra factorizes fields into independent
+            $z_\mu$ (Morphology) and $z_\alpha$ (Amplitude) tokens. By combining, for example, the local vortices
+            from Sample B ($z_{\mu,B}$) with the global magnitude profile of Sample A ($z_{\alpha,A}$),
+            the reconstruction maintains the <strong>fine-scale turbulent structure</strong> of one
             while strictly obeying the <strong>physical dynamic range</strong> of the other.
           </p>
         </div>
@@ -187,10 +208,10 @@
     function updateDashboard() {
       const mu = sliderMu.value;
       const alpha = sliderAlpha.value;
-      
+
       // Update image source
       imgElement.src = `static/KH_interactive_demo_frames/recon_mu${mu}_alpha${alpha}.jpg`;
-      
+
       // Update text labels (divide by 10 to show 0.0 -> 1.0)
       muDisplay.innerText = (mu / 10).toFixed(1);
       alphaDisplay.innerText = (alpha / 10).toFixed(1);
@@ -219,10 +240,10 @@
         <div class="container is-max-desktop">
       <div class="hero-body">
         <div class="has-text-centered">
-          <img src="static/images/Phaedra_FSQ_Cosmos_Comparison.svg" alt="Phaedra Comparisons" style="width:100%; max-width:800px;"> 
+          <img src="static/images/Phaedra_FSQ_Cosmos_Comparison.svg" alt="Phaedra Comparisons" style="width:100%; max-width:800px;">
         </div>
         <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
-          Phaedra consistently improves reconstruction across PDE datasets, capturing fine details and precise magnitudes critical for scientific simulation. This is achieved by splitting the embeddings into shape and gain components, allowing for high-fidelity tokenization that retains physical properties, even in out-of-distribution scenarios. 
+          Phaedra consistently improves reconstruction across PDE datasets, capturing fine details and precise magnitudes critical for scientific simulation. This is achieved by splitting the embeddings into shape and gain components, allowing for high-fidelity tokenization that retains physical properties, even in out-of-distribution scenarios.
         </h2>
       </div>
     </div>
@@ -230,17 +251,17 @@
 
   <section class="hero teaser">
 
-    
+
     <div class="container is-max-desktop">
       <div class="hero-body">
         <div class="has-text-centered">
-          <img src="static/images/data_distributions.png" alt="Data distributions" style="width:100%; max-width:800px;"> 
+          <img src="static/images/data_distributions.png" alt="Data distributions" style="width:100%; max-width:800px;">
         </div>
           <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
             Data distributions after normalization. Natural images have a fixed range and uniform distribution,
             even after normalization. Physical datasets, however, have
             a much larger range of values with outliers far outside the
-            nominal range.        
+            nominal range.
         </h2>
       </div>
     </div>
@@ -259,10 +280,11 @@
       <div class="container is-max-desktop">
       <div class="hero-body">
         <div class="has-text-centered">
-          <img src="static/images/Phaedra_pipeline_bottom.svg" alt="Phaedra Pipeline" style="width:100%; max-width:800px;"> 
+          <img src="static/images/Phaedra_pipeline_bottom.svg" alt="Phaedra Pipeline" style="width:100%; max-width:800px;">
         </div>
         <h2 class="subtitle has-text-centered" style="margin-top: 0rem;">
-         The Phaedra pipeline uses a single encoder to compute two sets of embeddings; the shape embeddings are quantized using sparse, high-dimensional FSQ to capture spatial structures, while the gain embeddings are passed through a dense, 1-dimensional quantizer which approximates a continuous channel, preserving physical magnitudes. Following quantization, a learned recombination operator combines these two embeddings and passes them to the decoder for the final recosntruction. 
+         The Phaedra pipeline uses a single encoder to compute two sets of embeddings; the shape embeddings are quantized using sparse, high-dimensional FSQ to capture spatial structures, while the gain embeddings are passed through a dense, 1-dimensional quantizer which approximates a continuous channel, preserving physical magnitudes. Following quantization, a learned recombination operator combines these two embeddings and passes them to the decoder for the final reconstruction.
+        </h2>
       </div>
     </div>
 </section>
@@ -275,7 +297,7 @@
 
     <div class="box" style="background-color: #fcfcfc;">
       <div class="columns is-vcentered">
-        
+
         <div class="column is-one-quarter">
           <div class="field mb-6">
             <label class="label is-size-5">
@@ -310,7 +332,7 @@
           </figure>
           <p class="mt-3 is-size-5 has-text-weight-bold has-text-grey-dark">Active Reconstruction</p>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -319,10 +341,10 @@
 <section class="section">
   <div class="container is-max-desktop">
     <h2 class="title is-3">PDE Reconstruction Benchmarks</h2>
-    
+
     <div class="content">
       <p>
-        All models are trained on the same set of data, comprising Compressible Euler time-series defined by 4 different classes of initial conditions and Incompressible Navier-Stokes defined by 2 different classes of initial conditions. While we present the some competitive tokenizers below, a comprehensive comparison against additional baselines is detailed in the <a href="https://arxiv.org/pdf/2602.03915.pdf" target="_blank" style="font-weight: bold; color: #3273dc;">main paper</a>. We evaluate <strong>Phaedra</strong> across three levels of difficulty. 
+        All models are trained on the same set of data, comprising Compressible Euler time-series defined by 4 different classes of initial conditions and Incompressible Navier-Stokes defined by 2 different classes of initial conditions. While we present some competitive tokenizers below, a comprehensive comparison against additional baselines is detailed in the <a href="https://arxiv.org/pdf/2602.03915.pdf" target="_blank" style="font-weight: bold; color: #3273dc;">main paper</a>. We evaluate <strong>Phaedra</strong> across three levels of difficulty.
       </p>
       <ul>
         <li><strong>ID (In-Distribution):</strong> Test samples from the same PDE family and parameters as training.</li>
@@ -407,10 +429,10 @@
     <h2 class="title is-3">Sentinel-2 L1C Earth Observation Data</h2>
     <div class="content">
       <div class="notification is-warning is-light">
-        <i class="fas fa-exclamation-triangle"></i> <strong>Zero-Shot Evaluation:</strong> 
+        <i class="fas fa-exclamation-triangle"></i> <strong>Zero-Shot Evaluation:</strong>
         All models were evaluated <strong>without fine-tuning</strong> on Earth Observation data, relying on representations learned from synthetic physical simulations.
       </div>
-      
+
       <table class="table is-bordered is-striped is-hoverable is-fullwidth">
         <thead>
           <tr style="background-color: #f5f5f5;">
@@ -469,7 +491,7 @@
   </div>
 
 <div class="columns is-centered">
-  <div class="column is-8"> 
+  <div class="column is-8">
     <figure class="image" style="max-width: 700px; margin-left: auto; margin-right: auto;">
       <img src="static/images/eo_recon.png" alt="Sentinel-2 Reconstruction results">
       <figcaption class="has-text-centered is-size-6 mt-1">
@@ -480,12 +502,280 @@
 </div>
 </section>
 
-<section class="section">
+<section class="section hero is-light" id="operators">
   <div class="container is-max-desktop">
-    <h2 class="title is-3">Conclusion & Discussion</h2>
+    <h2 class="title is-3">Neural Operators on Phaedra Tokens</h2>
     <div class="content has-text-justified">
       <p>
-        Our findings demonstrate that Phaedra successfully closes the "fidelity gap" that typically limits discrete tokenization in scientific applications. By balancing structural discretization with magnitude preservation, the model achieves superior reconstruction across diverse PDE families and exhibits remarkable <strong>zero-shot transfer</strong> to complex Earth observation data. This suggests that the shape-gain prior serves as a fundamental inductive bias for physical systems, enabling models to generalize across scales and disciplines. As we move toward larger scientific foundation models, Phaedra provides a robust framework for transforming continuous physical fields into discrete sequences without sacrificing the precision required for rigorous scientific analysis.
+        Tokens are only useful if models can learn on them. We train a 38M-parameter encoder&ndash;decoder
+        transformer that maps the tokens of an initial condition, together with a lead time $t$, to the tokens at
+        time $t$; the frozen Phaedra decoder turns the predicted tokens back into density, velocity and pressure.
+        The same transformer is trained on FSQ and VQ-VAE-2 tokens and on the latents of a continuous autoencoder,
+        and we compare with FNO, CNO and a ViT that work directly on the fields &mdash; every model has about
+        38M parameters (44M for the larger VQ-VAE-2 vocabularies) and is trained separately on three compressible Euler datasets from Poseidon:
+        Kelvin&ndash;Helmholtz (KH), curved Riemann (RC) and Riemann&ndash;Kelvin&ndash;Helmholtz (RKH), which the
+        tokenizer never saw during its training.
+      </p>
+    </div>
+
+    <h3 class="title is-4">Predicted tokens and the physics decoded from them</h3>
+    <div class="segmented" id="video-var-tabs" role="group" aria-label="Variable shown in the video">
+      <span class="segmented-label">Variable:</span>
+      <button type="button" class="button is-small is-rounded is-link is-active" data-value="rho" aria-pressed="true">density ρ</button>
+      <button type="button" class="button is-small is-rounded" data-value="u" aria-pressed="false">velocity u</button>
+      <button type="button" class="button is-small is-rounded" data-value="v" aria-pressed="false">velocity v</button>
+      <button type="button" class="button is-small is-rounded" data-value="p" aria-pressed="false">pressure p</button>
+    </div>
+    <div class="token-video-box">
+      <video id="token-video" autoplay loop muted playsinline preload="metadata" poster="static/videos/phaedra_tokens_rho_poster.jpg">
+        <source src="static/videos/phaedra_tokens_rho.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-caption-box">
+        <p>
+          The first test trajectory of each dataset, from $t = 0$ to the final time $t = 0.7$. From left to right:
+          the ground truth; the <strong>amplitude</strong> and <strong>morphology tokens</strong> predicted by the
+          transformer on the 32&times;32 token grid (morphology tokens are coloured by their FSQ code); the field
+          <strong>decoded</strong> from these tokens; and the absolute error, labelled with the relative $L_1$ error
+          of the frame. Every frame is predicted in a single step from the tokens of the initial condition; the
+          first frame shows the tokenized initial condition and its reconstruction. The video is rendered from the
+          released weights (<code>scripts/website/render_token_video.py</code>), and its errors are identical to
+          those in the evaluation below.
+        </p>
+      </div>
+    </div>
+
+    <h3 class="title is-4 mt-6">Accuracy at the final time</h3>
+    <div class="content has-text-justified">
+      <p>
+        Relative $L_1$ error (%) at $t = 0.7$, averaged over $\rho, u, v, p$ and the 240 test trajectories of each
+        dataset, &plusmn; the 95% bootstrap confidence interval. Every model is shown with its best prediction
+        strategy (tag: <em>d</em> direct $0 \to t$, <em>2s</em> autoregressive 2-step, <em>662</em> rollout
+        $0 \to 0.3 \to 0.6 \to 0.7$); bold marks the best model per dataset. Phaedra tokens are the best of the
+        discrete representations on all three datasets, with 16%, 28% and 43% lower error than FSQ tokens on KH,
+        RC and RKH. They give the lowest error of all models on RC and RKH; on KH the ViT (9.18%) and the
+        continuous-latent transformer (9.28%) are slightly more accurate than Phaedra (9.50%).
+      </p>
+    </div>
+    <div class="table-container">
+<!-- BEGIN:final-table -->
+<table class="table is-bordered is-hoverable is-fullwidth results-table">
+<thead><tr><th>Model</th><th>Input</th><th class="has-text-centered">KH</th><th class="has-text-centered">RC</th><th class="has-text-centered">RKH</th></tr></thead>
+<tbody>
+<tr class="phaedra-row"><td>Phaedra transformer</td><td>Phaedra tokens</td><td class="has-text-centered">9.50 <span class="ci">± 0.34</span> <span class="strategy" title="direct">d</span></td><td class="has-text-centered"><strong>27.21 <span class="ci">± 0.71</span></strong> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered"><strong>10.23 <span class="ci">± 0.80</span></strong> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>FSQ transformer</td><td>FSQ tokens</td><td class="has-text-centered">11.28 <span class="ci">± 0.34</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">38.05 <span class="ci">± 1.05</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">17.99 <span class="ci">± 1.37</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>VQ-VAE-2 transformer</td><td>VQ-VAE-2 tokens</td><td class="has-text-centered">15.14 <span class="ci">± 0.48</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">42.40 <span class="ci">± 0.63</span> <span class="strategy" title="direct">d</span></td><td class="has-text-centered">24.52 <span class="ci">± 1.15</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>Continuous transformer</td><td>continuous AE latents</td><td class="has-text-centered">9.28 <span class="ci">± 0.30</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">119.05 <span class="ci">± 2.96</span> <span class="strategy" title="direct">d</span></td><td class="has-text-centered">11.56 <span class="ci">± 0.70</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>FNO</td><td>physical fields</td><td class="has-text-centered">12.55 <span class="ci">± 0.36</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">35.63 <span class="ci">± 0.69</span> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">16.66 <span class="ci">± 0.91</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>CNO</td><td>physical fields</td><td class="has-text-centered">10.15 <span class="ci">± 0.32</span> <span class="strategy" title="2-step">2s</span></td><td class="has-text-centered">29.92 <span class="ci">± 0.74</span> <span class="strategy" title="2-step">2s</span></td><td class="has-text-centered">11.82 <span class="ci">± 0.82</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+<tr><td>ViT</td><td>physical fields</td><td class="has-text-centered"><strong>9.18 <span class="ci">± 0.27</span></strong> <span class="strategy" title="6-6-2">662</span></td><td class="has-text-centered">39.68 <span class="ci">± 0.58</span> <span class="strategy" title="direct">d</span></td><td class="has-text-centered">13.20 <span class="ci">± 0.79</span> <span class="strategy" title="6-6-2">662</span></td></tr>
+</tbody>
+</table>
+<!-- END:final-table -->
+    </div>
+    <details class="results-details">
+      <summary>Per-variable errors ($\rho, u, v, p$) of all 21 models</summary>
+      <div class="table-container">
+<!-- BEGIN:full-table -->
+<table class="table is-bordered is-hoverable is-fullwidth is-narrow results-table">
+<thead><tr><th>Model</th><th>Data</th><th class="has-text-centered">ρ</th><th class="has-text-centered">u</th><th class="has-text-centered">v</th><th class="has-text-centered">p</th><th class="has-text-centered">Average</th><th class="has-text-centered">Strategy</th></tr></thead>
+<tbody>
+<tr class="phaedra-row"><td>Phaedra</td><td>KH</td><td class="has-text-centered">4.78</td><td class="has-text-centered">8.43</td><td class="has-text-centered">24.29</td><td class="has-text-centered">0.51</td><td class="has-text-centered">9.50 ± 0.34</td><td class="has-text-centered">direct</td></tr>
+<tr class="phaedra-row"><td>Phaedra</td><td>RC</td><td class="has-text-centered">20.66</td><td class="has-text-centered">40.73</td><td class="has-text-centered">40.42</td><td class="has-text-centered">7.02</td><td class="has-text-centered">27.21 ± 0.71</td><td class="has-text-centered">6-6-2</td></tr>
+<tr class="phaedra-row"><td>Phaedra</td><td>RKH</td><td class="has-text-centered">6.52</td><td class="has-text-centered">16.01</td><td class="has-text-centered">15.64</td><td class="has-text-centered">2.74</td><td class="has-text-centered">10.23 ± 0.80</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FSQ</td><td>KH</td><td class="has-text-centered">5.30</td><td class="has-text-centered">10.91</td><td class="has-text-centered">28.27</td><td class="has-text-centered">0.62</td><td class="has-text-centered">11.28 ± 0.34</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FSQ</td><td>RC</td><td class="has-text-centered">28.12</td><td class="has-text-centered">57.08</td><td class="has-text-centered">56.77</td><td class="has-text-centered">10.21</td><td class="has-text-centered">38.05 ± 1.05</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FSQ</td><td>RKH</td><td class="has-text-centered">10.37</td><td class="has-text-centered">27.73</td><td class="has-text-centered">28.78</td><td class="has-text-centered">5.08</td><td class="has-text-centered">17.99 ± 1.37</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>VQ-VAE-2</td><td>KH</td><td class="has-text-centered">7.95</td><td class="has-text-centered">13.90</td><td class="has-text-centered">38.04</td><td class="has-text-centered">0.68</td><td class="has-text-centered">15.14 ± 0.48</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>VQ-VAE-2</td><td>RC</td><td class="has-text-centered">29.54</td><td class="has-text-centered">63.17</td><td class="has-text-centered">64.39</td><td class="has-text-centered">12.48</td><td class="has-text-centered">42.40 ± 0.63</td><td class="has-text-centered">direct</td></tr>
+<tr><td>VQ-VAE-2</td><td>RKH</td><td class="has-text-centered">14.73</td><td class="has-text-centered">38.09</td><td class="has-text-centered">37.29</td><td class="has-text-centered">7.97</td><td class="has-text-centered">24.52 ± 1.15</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>Continuous</td><td>KH</td><td class="has-text-centered">4.64</td><td class="has-text-centered">8.34</td><td class="has-text-centered">23.53</td><td class="has-text-centered">0.61</td><td class="has-text-centered">9.28 ± 0.30</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>Continuous</td><td>RC</td><td class="has-text-centered">77.95</td><td class="has-text-centered">197.31</td><td class="has-text-centered">156.93</td><td class="has-text-centered">44.00</td><td class="has-text-centered">119.05 ± 2.96</td><td class="has-text-centered">direct</td></tr>
+<tr><td>Continuous</td><td>RKH</td><td class="has-text-centered">7.09</td><td class="has-text-centered">18.09</td><td class="has-text-centered">17.87</td><td class="has-text-centered">3.18</td><td class="has-text-centered">11.56 ± 0.70</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FNO</td><td>KH</td><td class="has-text-centered">6.24</td><td class="has-text-centered">11.18</td><td class="has-text-centered">32.23</td><td class="has-text-centered">0.54</td><td class="has-text-centered">12.55 ± 0.36</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FNO</td><td>RC</td><td class="has-text-centered">26.31</td><td class="has-text-centered">53.62</td><td class="has-text-centered">53.42</td><td class="has-text-centered">9.16</td><td class="has-text-centered">35.63 ± 0.69</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>FNO</td><td>RKH</td><td class="has-text-centered">10.08</td><td class="has-text-centered">26.36</td><td class="has-text-centered">25.67</td><td class="has-text-centered">4.54</td><td class="has-text-centered">16.66 ± 0.91</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>CNO</td><td>KH</td><td class="has-text-centered">5.06</td><td class="has-text-centered">9.10</td><td class="has-text-centered">25.93</td><td class="has-text-centered">0.51</td><td class="has-text-centered">10.15 ± 0.32</td><td class="has-text-centered">2-step</td></tr>
+<tr><td>CNO</td><td>RC</td><td class="has-text-centered">22.65</td><td class="has-text-centered">44.44</td><td class="has-text-centered">44.66</td><td class="has-text-centered">7.94</td><td class="has-text-centered">29.92 ± 0.74</td><td class="has-text-centered">2-step</td></tr>
+<tr><td>CNO</td><td>RKH</td><td class="has-text-centered">6.79</td><td class="has-text-centered">18.83</td><td class="has-text-centered">18.50</td><td class="has-text-centered">3.17</td><td class="has-text-centered">11.82 ± 0.82</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>ViT</td><td>KH</td><td class="has-text-centered">4.64</td><td class="has-text-centered">8.25</td><td class="has-text-centered">23.33</td><td class="has-text-centered">0.51</td><td class="has-text-centered">9.18 ± 0.27</td><td class="has-text-centered">6-6-2</td></tr>
+<tr><td>ViT</td><td>RC</td><td class="has-text-centered">28.76</td><td class="has-text-centered">60.17</td><td class="has-text-centered">59.51</td><td class="has-text-centered">10.28</td><td class="has-text-centered">39.68 ± 0.58</td><td class="has-text-centered">direct</td></tr>
+<tr><td>ViT</td><td>RKH</td><td class="has-text-centered">9.09</td><td class="has-text-centered">20.86</td><td class="has-text-centered">19.66</td><td class="has-text-centered">3.18</td><td class="has-text-centered">13.20 ± 0.79</td><td class="has-text-centered">6-6-2</td></tr>
+</tbody>
+</table>
+<!-- END:full-table -->
+      </div>
+    </details>
+    <p class="is-size-7 has-text-grey">
+      All tables as CSV, Markdown and LaTeX:
+      <a href="https://github.com/camlab-ethz/Phaedra/tree/main/docs/results" target="_blank">docs/results</a>.
+      The released RKH operators are the checkpoints evaluated in the paper: step 56k of the Phaedra transformer and
+      epoch 59 of the continuous-latent transformer, whose training diverged afterwards.
+    </p>
+
+    <h3 class="title is-4 mt-6">Error over time</h3>
+    <div class="content has-text-justified">
+      <p>
+        Relative $L_1$ error over the prediction horizon (mean over $\rho, u, v, p$ and the 240 test trajectories).
+        <em>Direct</em> predicts every time in a single step from $t = 0$, <em>2-step</em> chains predictions of
+        $\Delta t = 0.1$, and <em>6-6-2</em> rolls out $0 \to 0.3 \to 0.6 \to 0.7$. Click a model in the legend to
+        hide it.
+      </p>
+    </div>
+    <div>
+      <div class="segmented" id="chart-ds" role="group" aria-label="Dataset">
+        <span class="segmented-label">Dataset:</span>
+        <button type="button" class="button is-small is-rounded is-link is-active" data-value="KH" aria-pressed="true">KH</button>
+        <button type="button" class="button is-small is-rounded" data-value="RC" aria-pressed="false">RC</button>
+        <button type="button" class="button is-small is-rounded" data-value="RKH" aria-pressed="false">RKH</button>
+      </div>
+      <div class="segmented" id="chart-strategy" role="group" aria-label="Prediction strategy">
+        <span class="segmented-label">Strategy:</span>
+        <button type="button" class="button is-small is-rounded is-link is-active" data-value="direct" aria-pressed="true">direct</button>
+        <button type="button" class="button is-small is-rounded" data-value="2-step" aria-pressed="false">2-step</button>
+        <button type="button" class="button is-small is-rounded" data-value="6-6-2" aria-pressed="false">6-6-2</button>
+      </div>
+      <label class="checkbox segmented"><input type="checkbox" id="chart-log" checked> log scale</label>
+    </div>
+    <div class="chart-box"><canvas id="timestep-chart" role="img" aria-label="Relative L1 error over time for every model"></canvas></div>
+    <p id="timestep-chart-note"></p>
+<!-- BEGIN:results-json -->
+<script id="results-data" type="application/json">{"datasets":["KH","RC","RKH"],"strategies":{"direct":{"t":[0.1,0.2,0.3,0.4,0.5,0.6,0.7],"series":{"KH":{"FNO":[6.633,7.425,8.231,9.197,10.344,11.603,13.099],"CNO":[5.146,5.971,6.729,7.702,8.803,10.047,11.719],"ViT":[5.203,5.527,6.063,6.812,7.67,8.533,9.711],"Continuous":[6.146,6.08,6.321,6.855,7.589,8.398,9.415],"VQ-VAE-2":[12.193,11.109,10.799,11.535,12.478,13.764,15.283],"FSQ":[6.782,7.644,8.244,8.98,10.091,11.091,11.993],"Phaedra":[5.638,5.964,6.3,6.852,7.622,8.42,9.502]},"RC":{"FNO":[17.287,22.046,26.904,31.467,35.185,38.744,42.804],"CNO":[7.613,13.187,19.721,26.174,31.63,36.377,41.228],"ViT":[16.532,21.382,26.478,31.213,34.144,36.988,39.679],"Continuous":[113.756,118.119,119.403,125.101,129.611,122.1,119.051],"VQ-VAE-2":[19.73,23.842,29.207,33.907,36.953,39.373,42.395],"FSQ":[10.959,16.214,22.744,28.771,33.752,38.307,42.214],"Phaedra":[7.142,9.833,13.65,18.009,21.926,25.351,28.872]},"RKH":{"FNO":[5.428,6.761,8.999,11.527,13.093,15.423,18.588],"CNO":[2.503,3.521,5.315,7.56,9.466,12.358,15.838],"ViT":[4.603,5.74,7.892,9.972,11.262,13.377,15.886],"Continuous":[3.489,3.923,5.411,7.054,7.98,9.547,11.847],"VQ-VAE-2":[9.118,10.595,13.863,17.72,19.97,22.802,26.002],"FSQ":[4.712,5.631,7.851,10.286,12.3,15.132,18.546],"Phaedra":[2.834,3.315,4.685,6.361,7.661,9.672,12.27]}}},"2-step":{"t":[0.1,0.2,0.3,0.4,0.5,0.6,0.7],"series":{"KH":{"FNO":[6.633,7.487,8.414,9.511,10.705,11.875,13.317],"CNO":[5.146,5.73,6.271,7.054,7.965,8.926,10.15],"ViT":[5.203,5.502,5.902,6.635,7.564,8.538,9.68],"Continuous":[6.146,6.223,7.47,7.982,8.489,9.278,10.247],"VQ-VAE-2":[12.193,11.57,11.929,13.157,15.014,17.436,20.389],"FSQ":[6.782,7.665,8.35,9.214,10.328,11.667,13.284],"Phaedra":[5.638,6.588,7.831,8.475,9.422,10.65,12.137]},"RC":{"FNO":[17.287,20.703,24.298,27.706,30.493,33.12,35.947],"CNO":[7.613,11.238,15.284,19.367,23.022,26.467,29.923],"ViT":[16.532,24.868,35.474,46.247,55.201,62.953,70.186],"Continuous":[113.756,133.647,139.839,143.271,143.742,145.013,147.421],"VQ-VAE-2":[19.73,27.68,36.3,44.532,51.395,57.606,63.735],"FSQ":[10.959,16.047,21.799,27.324,31.84,35.771,39.29],"Phaedra":[7.142,10.707,15.448,20.614,25.527,30.224,34.945]},"RKH":{"FNO":[5.428,6.884,9.371,12.053,13.692,15.638,17.984],"CNO":[2.503,3.479,5.044,6.909,8.436,10.337,12.411],"ViT":[4.603,5.536,7.361,9.482,10.984,12.872,15.055],"Continuous":[3.489,4.934,7.839,10.892,13.048,15.602,18.795],"VQ-VAE-2":[9.118,12.807,18.546,24.774,29.151,33.61,37.803],"FSQ":[4.712,6.978,10.816,15.355,18.886,23.342,28.588],"Phaedra":[2.834,3.837,5.619,7.741,9.318,11.293,13.616]}}},"6-6-2":{"t":[0.3,0.6,0.7],"series":{"KH":{"FNO":[8.231,11.301,12.55],"CNO":[6.729,9.062,10.153],"ViT":[6.063,8.345,9.181],"Continuous":[6.321,8.431,9.279],"VQ-VAE-2":[10.799,13.329,15.144],"FSQ":[8.244,10.524,11.276],"Phaedra":[6.3,8.719,9.713]},"RC":{"FNO":[26.904,33.254,35.626],"CNO":[19.721,29.059,32.096],"ViT":[26.478,41.191,48.712],"Continuous":[119.403,144.853,150.234],"VQ-VAE-2":[29.207,39.526,44.589],"FSQ":[22.744,34.573,38.047],"Phaedra":[13.65,23.259,27.208]},"RKH":{"FNO":[8.999,14.691,16.659],"CNO":[5.315,10.147,11.822],"ViT":[7.892,11.95,13.195],"Continuous":[5.411,9.262,11.561],"VQ-VAE-2":[13.863,21.16,24.519],"FSQ":[7.851,14.318,17.991],"Phaedra":[4.685,8.464,10.23]}}}},"models":["Phaedra","FSQ","VQ-VAE-2","Continuous","FNO","CNO","ViT"]}</script>
+<!-- END:results-json -->
+
+    <h3 class="title is-4 mt-6">All models at $t = 0.7$</h3>
+    <div class="tabs is-toggle is-small is-centered" id="compare-ds-tabs">
+      <ul>
+        <li class="is-active" data-value="kh"><a>Kelvin&ndash;Helmholtz (KH)</a></li>
+        <li data-value="rc"><a>curved Riemann (RC)</a></li>
+        <li data-value="rkh"><a>Riemann&ndash;Kelvin&ndash;Helmholtz (RKH)</a></li>
+      </ul>
+    </div>
+    <figure class="compare-figure">
+      <img id="compare-img" src="static/images/operators/compare_kh.jpg" loading="lazy"
+           alt="Ground truth and every operator at t = 0.7 (KH, first test trajectory)">
+      <figcaption class="is-size-7 has-text-grey mt-2">
+        The first test trajectory at the final time, all four variables. Each model is shown with the strategy of the
+        table above; the label gives its average relative $L_1$ error on this trajectory. The colour scales follow the
+        ground truth.
+      </figcaption>
+    </figure>
+
+    <h3 class="title is-4 mt-6">The tokenizer sets the floor</h3>
+    <div class="content has-text-justified">
+      <p>
+        Decoding the ground-truth tokens of the test data gives the lowest error that any operator on a
+        representation can reach. Phaedra's floor is 1.6&ndash;1.9&times; lower than that of FSQ and
+        2.3&ndash;2.5&times; lower than that of VQ-VAE-2 on the same 32&times;32 token grid; only the continuous
+        autoencoder, which is not discrete, is lower. Relative $L_1$ error (%) at $t = 0.7$, mean over
+        $\rho, u, v, p$.
+      </p>
+    </div>
+    <div class="table-container">
+<!-- BEGIN:floor-table -->
+<table class="table is-bordered is-hoverable is-narrow results-table floor-table">
+<thead><tr><th>Tokenizer</th><th class="has-text-centered">KH</th><th class="has-text-centered">RC</th><th class="has-text-centered">RKH</th></tr></thead>
+<tbody>
+<tr class="phaedra-row"><td>Phaedra</td><td class="has-text-centered">0.54</td><td class="has-text-centered">3.30</td><td class="has-text-centered">1.49</td></tr>
+<tr><td>FSQ</td><td class="has-text-centered">1.01</td><td class="has-text-centered">5.16</td><td class="has-text-centered">2.36</td></tr>
+<tr><td>VQ-VAE-2</td><td class="has-text-centered">1.37</td><td class="has-text-centered">8.39</td><td class="has-text-centered">3.45</td></tr>
+<tr><td>Continuous AE <span class="ci">(not discrete)</span></td><td class="has-text-centered">0.27</td><td class="has-text-centered">1.48</td><td class="has-text-centered">0.65</td></tr>
+</tbody>
+</table>
+<!-- END:floor-table -->
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mae">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Masked Autoencoding on Token Grids</h2>
+    <div class="content has-text-justified">
+      <p>
+        Phaedra tokens also support self-supervised learning. A masked autoencoder (a transformer with about 48M parameters)
+        sees a token grid with 75% of its tokens hidden and reconstructs them. It is pre-trained on KH, RC and RKH
+        together and then fine-tuned on each dataset. The table gives the relative $L_1$ error (%) of the fields
+        decoded from the reconstructed token grids, mean over $\rho, u, v, p$ (number of test trajectories in
+        parentheses).
+      </p>
+    </div>
+    <div class="table-container">
+<!-- BEGIN:mae-table -->
+<table class="table is-bordered is-hoverable is-narrow is-fullwidth results-table">
+<thead><tr><th>Tokens</th><th class="has-text-centered">pre-trained on 3 PDEs<br><span class="ci">evaluated on RKH</span></th><th class="has-text-centered">fine-tuned<br><span class="ci">evaluated on KH</span></th><th class="has-text-centered">fine-tuned<br><span class="ci">evaluated on RC</span></th><th class="has-text-centered">fine-tuned<br><span class="ci">evaluated on RKH</span></th></tr></thead>
+<tbody>
+<tr class="phaedra-row"><td>Phaedra</td><td class="has-text-centered">16.43<span class="ci"> (10 traj.)</span></td><td class="has-text-centered">4.76<span class="ci"> (10 traj.)</span></td><td class="has-text-centered">22.17<span class="ci"> (10 traj.)</span></td><td class="has-text-centered">7.27<span class="ci"> (10 traj.)</span></td></tr>
+<tr><td>FSQ</td><td class="has-text-centered">16.91<span class="ci"> (10 traj.)</span></td><td class="has-text-centered">6.29<span class="ci"> (1 traj.)</span></td><td class="has-text-centered">28.20<span class="ci"> (1 traj.)</span></td><td class="has-text-centered">7.07<span class="ci"> (1 traj.)</span></td></tr>
+</tbody>
+</table>
+<!-- END:mae-table -->
+    </div>
+    <p class="is-size-7 has-text-grey">
+      The masks are random, so each number comes from one evaluation run. The fine-tuned FSQ models were evaluated
+      on a single test trajectory.
+    </p>
+  </div>
+</section>
+
+<section class="section hero is-light" id="resources">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Code, Models and Data</h2>
+    <div class="columns is-multiline">
+      <div class="column is-one-third">
+        <div class="card resource-card"><div class="card-content">
+          <p class="title"><span class="icon"><i class="fab fa-github"></i></span>
+            <a href="https://github.com/camlab-ethz/Phaedra" target="_blank">Code</a></p>
+          <div class="content">
+            The tokenizer (also as a small pip-installable package), token generation, the 21 neural operators,
+            masked autoencoding, and the evaluation that reproduces every number on this page. MIT license.
+          </div>
+        </div></div>
+      </div>
+      <div class="column is-one-third">
+        <div class="card resource-card"><div class="card-content">
+          <p class="title"><span class="icon">&#129303;</span>
+            <a href="https://huggingface.co/llingsch/phaedra" target="_blank">Models</a></p>
+          <div class="content">
+            Four tokenizers (Phaedra, FSQ, VQ-VAE-2, continuous AE), the 21 neural operators and eight masked
+            autoencoders as <code>safetensors</code>, each with its training configuration. CC BY-NC 4.0.
+          </div>
+        </div></div>
+      </div>
+      <div class="column is-one-third">
+        <div class="card resource-card"><div class="card-content">
+          <p class="title"><span class="icon">&#129303;</span>
+            <a href="https://huggingface.co/datasets/llingsch/phaedra-tokens" target="_blank">Tokenized data</a></p>
+          <div class="content">
+            Phaedra, FSQ and VQ-VAE-2 tokens and continuous latents of KH, RC and RKH: 10,000 trajectories with 21
+            time steps each (44&nbsp;GB). CC BY-NC 4.0, following the Poseidon source data.
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <h3 class="title is-5 mt-4">Tokenize a field</h3>
+<pre class="quickstart"><code>git clone https://github.com/camlab-ethz/Phaedra.git &amp;&amp; cd Phaedra &amp;&amp; pip install -e .
+
+import torch
+from phaedra import load_pretrained
+
+model = load_pretrained()                        # the paper's tokenizer, downloaded from Hugging Face
+x = torch.randn(1, 1, 128, 128)                  # a field normalized per variable: (x - mean) / std
+quant, _, (morph, amp), _ = model.encode(x)      # morphology and amplitude tokens on the 32x32 grid
+x_rec = model.decode(quant)</code></pre>
+    <p class="is-size-7 has-text-grey">
+      Reproducing the operator and MAE results, training from scratch and preparing the Poseidon data are described in
+      the <a href="https://github.com/camlab-ethz/Phaedra#readme" target="_blank">README</a>.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Conclusion &amp; Discussion</h2>
+    <div class="content has-text-justified">
+      <p>
+        Our findings demonstrate that Phaedra successfully closes the "fidelity gap" that typically limits discrete tokenization in scientific applications. By balancing structural discretization with magnitude preservation, the model achieves superior reconstruction across diverse PDE families and exhibits remarkable <strong>zero-shot transfer</strong> to complex Earth observation data. The higher fidelity carries over to learning on the tokens: neural operators trained on Phaedra tokens are more accurate than those trained on the other discrete tokenizers. This suggests that the shape-gain prior serves as a fundamental inductive bias for physical systems, enabling models to generalize across scales and disciplines. As we move toward larger scientific foundation models, Phaedra provides a robust framework for transforming continuous physical fields into discrete sequences without sacrificing the precision required for rigorous scientific analysis.
       </p>
     </div>
   </div>
@@ -493,18 +783,25 @@
 
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre id="bibtex-code"><code>@misc{lingsch2026phaedralearninghighfidelitydiscrete,
-      title={Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Science}, 
-      author={Levi Lingsch and Georgios Kissas and Johannes Jakubik and Siddhartha Mishra},
-      year={2026},
-      eprint={2602.03915},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2602.03915}, 
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" type="button" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@inproceedings{lingsch2026phaedra,
+  title         = {Phaedra: Learning High-Fidelity Discrete Tokenization for the Physical Sciences},
+  author        = {Lingsch, Levi and Kissas, Georgios and Jakubik, Johannes and Mishra, Siddhartha},
+  booktitle     = {Advances in Neural Information Processing Systems},
+  year          = {2026},
+  eprint        = {2602.03915},
+  archivePrefix = {arXiv},
+  url           = {https://arxiv.org/abs/2602.03915}
 }</code></pre>
     </div>
   </section>
+  </main>
 
   <footer class="footer">
     <div class="container">
@@ -513,12 +810,18 @@
           This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
         </p>
       </div>
+    </div>
+  </footer>
+
+  <button class="scroll-to-top" type="button" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
 
 <script>
 document.addEventListener('click', function(event) {
   // Find the closest link element that was clicked
   var link = event.target.closest('a');
-  
+
   if (link && link.href.includes('arxiv.org')) {
     gtag('event', 'paper_view', {
       'event_category': 'engagement',
