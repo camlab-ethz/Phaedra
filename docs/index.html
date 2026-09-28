@@ -617,8 +617,9 @@
     <div class="content has-text-justified">
       <p>
         Relative $L_1$ error over the prediction horizon (mean over $\rho, u, v, p$ and the 240 test trajectories).
-        <em>Direct</em> predicts every time in a single step from $t = 0$, <em>2-step</em> chains predictions of
-        $\Delta t = 0.1$, and <em>6-6-2</em> rolls out $0 \to 0.3 \to 0.6 \to 0.7$. Click a model in the legend to
+        The snapshots are $\Delta t = 0.05$ apart. <em>Direct</em> predicts every time in a single step from $t = 0$,
+        <em>2-step</em> chains predictions two snapshots ahead ($2\Delta t = 0.1$ per step, $0 \to 0.1 \to \dots \to 0.7$),
+        and <em>6-6-2</em> rolls out $0 \to 0.3 \to 0.6 \to 0.7$. Click a model in the legend to
         hide it.
       </p>
     </div>
